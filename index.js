@@ -1,4 +1,21 @@
-var head  = document.getElementsByTagName('head')[0];
+window.blib =(function(){
+	var self = this;
+	var head = document.getElementsByTagName('head')[0];
+	
+	return function(){
+		this.css = function(cssFile){
+			//подрубаем цсс
+		}
+		
+		
+	}
+
+})(); 
+
+
+
+
+
 var link  = document.createElement('link');
 link.rel  = 'stylesheet';
 link.type = 'text/css';
