@@ -2,27 +2,31 @@ window.blib =(function(){
 	var self = this;
 	var head = document.getElementsByTagName('head')[0];
 	
-	return function(){
-		this.css = function(cssFile){
-			//подрубаем цсс
-		}
+	return {
+		//include css file
+		'css': function(cssFile){
+			var link  = document.createElement('link');
+			link.rel  = 'stylesheet';
+			link.type = 'text/css';
+			link.href = cssFile.toString();
+			link.media = 'all';
+			head.appendChild(link);
+		},
+		'addBlock':function(target, file,  title){
+			
+			var blockName = $('<div />', {class: "b-blib__block-title", text: title});
+			var block = $('<div />', {class: target+" b-blib__block"});
+			block.load(file);
+			
+			$('.b-blib').append(blockName);
+			$('.b-blib').append(block);
+		},
 		
-		
-	}
+	};
 
 })(); 
 
-
-
-
-
-var link  = document.createElement('link');
-link.rel  = 'stylesheet';
-link.type = 'text/css';
-link.href = 'index.css';
-link.media = 'all';
-head.appendChild(link);
-
+blib.css("index.css");
 $(document).ready(function(){
-	$('.b-blib__train').load("/b-/b-train/b-train.html");
+	
 });

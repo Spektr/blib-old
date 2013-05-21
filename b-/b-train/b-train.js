@@ -1,10 +1,4 @@
-var head  = document.getElementsByTagName('head')[0];
-var link  = document.createElement('link');
-link.rel  = 'stylesheet';
-link.type = 'text/css';
-link.href = '/b-/b-train/b-train.css';
-link.media = 'all';
-head.appendChild(link);
+blib.css('/b-/b-train/b-train.css');
 
 $(document).ready(function(){
 	/*наведение на иконки платежных систем*/
