@@ -14,7 +14,7 @@
 .b-readme__link{}
 </style>
 
-<div class="b-readme">
+<div class="b-readme" style="border:1px solid #DADADA;">
 	<div class="b-readme__title">
 		Здесь заголовок
 	</div>
