@@ -1,7 +1,7 @@
 <div>
 	<div class="b-readme__title">
 		Здесь заголовок
-		<img src="https://github.com/Spektr/blib/blob/master/index_logo.png">
+		<img src="http://blib.xe0.ru/index_logo.png">
 	</div>
 	<div class="b-readme__content">
 		Здесь содержание
