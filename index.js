@@ -12,15 +12,21 @@ window.blib =(function(){
 			link.media = 'all';
 			head.appendChild(link);
 		},
-		'addBlock':function(target, file,  title){
-			
-			var blockName = $('<div />', {class: "b-blib__block-title", text: title});
-			var block = $('<div />', {class: target+" b-blib__block"});
-			block.load(file);
-			
-			$('.b-blib').append(blockName);
-			$('.b-blib').append(block);
-		},
+
+        //create block
+		'addBlock':function(target/*name of new block*/,
+                            file/*where is it place*/,
+                            title/*block's title*/,
+                            note/*block's note*/){
+
+            var block = $('<div />', {'class': target+" b-blib__block"});
+			var title = $('<div />', {'class': "b-blib__block-title", 'text': title});
+            var content = $('<div />', {'class': "b-blib__block-content"});
+            content.load(file);
+            var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
+            block.append(title, content, note);
+            $('.b-blib').append(block);
+		}
 		
 	};
 

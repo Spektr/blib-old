@@ -1,5 +1,4 @@
 .b-blib{
-	text-align:center;
 	min-width:800px;
 	max-width:80%;
 	position:relative;
@@ -7,6 +6,7 @@
 }
 
 .b-blib__header{
+    text-align: center;
 	margin: 0 0 20px 0;
 	padding: 5px;
 	
@@ -22,13 +22,25 @@
 }
 .b-blib__footer{}
 .b-blib__block{
-	margin:10px 5px;
+	margin:10px 0 0 0;
+    padding:0;
 	border:1px solid #999999;
 }
 .b-blib__block-title{
-	position:absolute;
-	margin:5px 10px;
+	position:relative;
+    width: 100%;
+	margin:0;
 	padding: 3px;
-	border:1px dashed #CCCCCC;
+    box-sizing: border-box;
+	border-bottom:1px dashed #CCCCCC;
 	cursor:pointer;
+}
+.b-blib__block-content{
+    text-align: center;
+    margin:10px 0;
+    padding: 0;
+}
+.b-blib__block-note{
+    padding: 3px;
+    border-top:1px dashed #CCCCCC;
 }
