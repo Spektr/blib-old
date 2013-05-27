@@ -24,7 +24,9 @@ window.blib =(function(){
             var content = $('<div />', {'class': "b-blib__block-content"});
             content.load(file);
             var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
-            block.append(title, content, note);
+            var innerCode = $('<textarea />', {'class': "b-blib__block-code", 'text':content.get(0)});
+
+            block.append(title, content, note, innerCode);
             $('.b-blib').append(block);
 		}
 		
