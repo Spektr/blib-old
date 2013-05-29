@@ -21,13 +21,22 @@ window.blib =(function(){
 
             var block = $('<div />', {'class': target+" b-blib__block"});
 			var title = $('<div />', {'class': "b-blib__block-title", 'text': title});
+
+            title.on('click', function(){
+                $(this).parent().find('.b-blib__block-code').toggle(400);
+            });
+
             var content = $('<div />', {'class': "b-blib__block-content"});
             content.load(file);
+            console.log();
             var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
             var innerCode = $('<textarea />', {'class': "b-blib__block-code", 'text':content.get(0)});
-
+            innerCode.hide();
+            document.write(content.get(0));
             block.append(title, content, note, innerCode);
             $('.b-blib').append(block);
+            var lol = document.getElementsByTagName('textarea');
+
 		}
 		
 	};
