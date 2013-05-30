@@ -28,15 +28,15 @@ window.blib =(function(){
 
             var content = $('<div />', {'class': "b-blib__block-content"});
             content.load(file);
-            console.log();
             var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
-            var innerCode = $('<textarea />', {'class': "b-blib__block-code", 'text':content.get(0)});
+            var innerCode = $('<textarea />', {'class': "b-blib__block-code", 'text':content[0].outerHTML});
             innerCode.hide();
-            document.write(content.get(0));
             block.append(title, content, note, innerCode);
             $('.b-blib').append(block);
-            var lol = document.getElementsByTagName('textarea');
 
+            var lol = document.getElementsByTagName('textarea');
+            console.log(content[0].outerHTML);
+            document.write("++"+content[0].outerHTML);
 		}
 		
 	};
