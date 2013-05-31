@@ -27,9 +27,10 @@ window.blib =(function(){
             });
 
             var content = $('<div />', {'class': "b-blib__block-content"});
-            content.load(file);
+            var innerCode = $('<textarea />', {'class': "b-blib__block-code"});
+            content.load(file, function(){innerCode.text(content[0].innerHTML);});
             var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
-            var innerCode = $('<textarea />', {'class': "b-blib__block-code", 'text':content[0].outerHTML});
+
             innerCode.hide();
             block.append(title, content, note, innerCode);
             $('.b-blib').append(block);
