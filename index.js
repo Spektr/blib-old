@@ -17,12 +17,16 @@ window.blib =(function(){
 		'addBlock':function(target/*name of new block*/,
                             file/*where is it place*/,
                             title/*block's title*/,
-                            note/*block's note*/){
+                            note/*block's note*/,
+                            techno/*array of technology*/){
 
             var block = $('<div />', {'class': target+" b-blib__block"});
 			var title = $('<div />', {'class': "b-blib__block-title", 'text': title});
 
-
+            var technology = new Array();
+            for(key in techno){
+                technology.push($('<div />', {'class':"b-blib__block-technology b-blib__block-technology_"+techno[key]}));
+            }
 
             var content = $('<div />', {'class': "b-blib__block-content"});
             var innerCode = $('<pre />', {'class': "b-blib__block-code"});
@@ -35,7 +39,7 @@ window.blib =(function(){
             var note = $('<div />', {'class': "b-blib__block-note", 'text': note});
 
             innerCode.hide();
-            block.append(title, content, note, innerCode);
+            block.append(technology, title, content, note, innerCode);
             $('.b-blib').append(block);
 		}
 		
