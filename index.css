@@ -37,6 +37,8 @@
 	cursor:pointer;
 }
 .b-blib__block-content{
+    
+    min-height: 100px;
     text-align: center;
     margin:10px 0;
     padding: 0;
