@@ -1,16 +1,23 @@
 window.blib =(function(){
 	var self = this;
 	var head = document.getElementsByTagName('head')[0];
+    var css = new Array();
 	
 	return {
 		//include css file
 		'css': function(cssFile){
+            cssFile = cssFile.toString();
+            for(key in css){
+                if(cssFile==css[key]){return true;}
+            }
+
+
 			var link  = document.createElement('link');
 			link.rel  = 'stylesheet';
 			link.type = 'text/css';
-			link.href = cssFile.toString();
+			link.href = cssFile;
 			link.media = 'all';
-			head.appendChild(link);
+			if(head.appendChild(link)){css.push(cssFile);};
 		},
 
         //create block
