@@ -1,0 +1,44 @@
+@import url(/b-/b-menu/__cell/b-menu__cell.css);
+
+.b-menu{
+    height: 100%;
+    width:100%;
+    white-space: nowrap;
+}
+
+.b-menu_center{
+	text-align:center;
+}
+
+.b-menu_position_horisontal .b-menu__cell{
+	display:inline-block;
+	margin: 5px 5px 5px 5px;
+}
+
+.b-menu_transparent_off{
+    background: inherit;
+    -webkit-border-radius: inherit;
+    -moz-border-radius: inherit;
+    border-radius: inherit;
+}
+.b-menu_transparent_off .b-menu__cell{
+    background: inherit;
+}
+.b-menu_transparent_off img{
+    background: inherit;
+}
+
+.b-memu__selected-cell{
+    height: 50px;
+    overflow: hidden;
+}
+.b-memu__selected-cell .b-menu__cell{
+    width:45px;
+}
+.b-memu__selected-cell .b-menu__cell[alt]:after{
+    width:85px;
+}
+
+.b-memu__content{
+
+}

@@ -1,0 +1,34 @@
+.b-popup-menu{
+    margin: 0;
+    width: 52px;
+}
+.b-popup-menu__content{
+    margin: 0 0 5px 0;
+    overflow: hidden;
+
+    background: #b4b1ae;
+    border: 1px solid #999999;
+}
+.b-popup-menu__content_closed{
+    height: 0px;
+}
+.b-popup-menu__content_closed div{
+    display: none;
+}
+
+.b-popup-menu__opener{
+    margin: 2px;
+
+    background: #b4b1ae;
+    border: 1px solid #999999;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+.b-popup-menu__opener:hover{
+    text-shadow: 0px 0px 2px white;
+}
+.b-popup-menu__opener:active{
+    background: #9e9b98;
+}
