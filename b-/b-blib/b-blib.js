@@ -49,5 +49,20 @@ window.blib =(function(){
 				document.addEventListener("DOMContentLoaded", function(){ obj.js(file+'.js');}, false );
 			}
 		}
+		
+		'checkCache':function(file){
+			var variable = true;
+			
+		}
+		
+		'vanishLoad':function(file){
+			
+			
+			
+			var obj = this;
+			obj.css(file+'.css');
+			obj.js(file+'.js');
+		}
+		
 	};
 })(); 
