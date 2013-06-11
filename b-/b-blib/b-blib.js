@@ -26,6 +26,7 @@ window.blib =(function(){
 				}else{
 					css.push(cssFile);
 				}
+				//0_0 убрать нули из массива
 				
 				if('localStorage' in window && window['localStorage'] !== null){
 					localStorage.setItem("cssCache", JSON.stringify(cssCache));
@@ -86,17 +87,18 @@ window.blib =(function(){
 			if('localStorage' in window && window['localStorage'] !== null){
 
 				var arr = JSON.parse(localStorage.getItem('cssCache'));
+				css.push(JSON.parse(localStorage.getItem('css')));
 				for(key in arr){
 					obj.css(arr[key], []);
 				}
-				css = JSON.parse(localStorage.getItem('css'))||[];
+				
 
 				var arr = JSON.parse(localStorage.getItem('jsCache'));
-				//console.log(arr);
+				js.push(JSON.parse(localStorage.getItem('js')));
 				for(key in arr){
 					obj.js(arr[key], []);
 				}
-				js = JSON.parse(localStorage.getItem('js'))||[];
+
 
 			}
 			
