@@ -51,19 +51,23 @@ window.blib =(function(){
 			var variable = true;
 		},
 		
+		//0_0 create native realisation(whithout jquery)
 		'vanishLoad':function(){
+			if(!window.jQuery){	this.js('/b-/b-jquery/b-jquery.js');}
 			var obj = this;
 			window.onload = function(){
 				var requestData ={'css':css, 'js':js};
 				$.ajax({
 					url:'/b-/b-blib/b-blib.php',
 					data:"data="+JSON.stringify(requestData),
-					dataType: "html",
+					dataType: "json",
 					success: function(data){
 						console.log(data);
 						if(!data['status']){return false;}
-						obj.css('/b-/b-blib/__cache/'+data['css']);
-						obj.js('/b-/b-blib/__cache/'+data['js']);
+						obj.css(data['css']['path']);
+						css.push(data['css']['list']);
+						obj.js(data['js']['path']);
+						js.push(data['js']['list']);
 					}
 				});
 			}

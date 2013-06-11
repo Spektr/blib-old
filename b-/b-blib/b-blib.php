@@ -1,15 +1,5 @@
 <?php 
-
-$code = "";
-$list =scan('..\..','*.css',$code);
-setCache($code, $list, '.css');
-
 getCache(json_decode($_REQUEST['data']));
-
-
-
-
-
 
 /*
 //выплевываем кэш по запросу от клиента
@@ -17,21 +7,24 @@ getCache(json_decode($_REQUEST['data']));
 //[answer] пока нет
 */
 function getCache($types){
-	
-	//$ini = @file_get_contents("__cache/b-cache.ini");
-	//$ini = json_decode($ini);
-	
-	var_dump($types);
-	$d = array();
-	$arr = opendir("__cache");
-	while($v = readdir($arr)){
-		if($v == '.' or $v == '..') continue;
-		foreach($types as $key =>$value){
-			if(fnmatch("*.".$key, $v)){
-				$answer['status']=true;
-				$answer[$key]= $v;
-			}
+	foreach($types as $key => $value){
+		sort($value);
+		$name = md5(implode("",$value));
+		$name .=".".$key;
+		$path="b-/b-blib/__cache/$name";
+		if(!file_exists("__cache/$name")){
+			$code = "";
+			$list =scan('../..','*.'.$key, $value, $code);
+			setCache($code, $list, $value, '.'.$key);
+		}else{
+			$ini = @file_get_contents("__cache/b-cache.ini");
+			$ini = (array)json_decode($ini);
+			$list = $ini[$path];
 		}
+
+		$answer['status']=true;
+		$answer[$key]['path']= $path;
+		$answer[$key]['list']= $list;
 	}
 	
 	echo json_encode($answer);
@@ -40,19 +33,21 @@ function getCache($types){
 
 /*
 //сканирует все директории и склеивает весь код указанного типа файлов
-//[param] $dir-директория , $mask-какие файлы склеивать, $code - куда поместить склееянный код
-//[answer] массив имен склеянных файлов
+//[param] $dir-директория , $mask-какие типы файлов склеивать, $exept - массив уже не нужных файлов, $code - куда поместить склееянный код
+//[answer] массив имен склеянных файлов, пишет код в $code
 */
-function scan($dir, $mask, &$code){
+function scan($dir, $mask, $exept, &$code){
 	$d = array();
 	$arr = opendir($dir);
 	while($v = readdir($arr)){
 		if($v == '.' or $v == '..' or $v == 'b-blib') continue;
-		if(!is_dir($dir.DIRECTORY_SEPARATOR.$v) && fnmatch($mask, $v)){
-			$d[] = substr($dir.DIRECTORY_SEPARATOR.$v, 6);
-			$code .= @file_get_contents($dir.DIRECTORY_SEPARATOR.$v);
-		}elseif(is_dir($dir.DIRECTORY_SEPARATOR.$v)){
-			$d = array_merge($d, scan($dir.DIRECTORY_SEPARATOR.$v, $mask, $code));
+		if(!is_dir($dir.'/'.$v) && fnmatch($mask, $v)){
+			$temp = substr($dir.'/'.$v, 6);
+			if(in_array($temp, $exept))continue;
+			$d[] = $temp;		
+			$code .= @file_get_contents($dir.'/'.$v);
+		}elseif(is_dir($dir.'/'.$v)){
+			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code));
 		}
 	}
 	return $d;
@@ -60,12 +55,14 @@ function scan($dir, $mask, &$code){
 
 /*
 //устанавливает кэш
-//[param] $code - код кешируемого файла, $list - список склеенных файлов, $extension - расширения файлов
+//[param] $code - код кешируемого файла, $list - список склеенных файлов, $name - список отсутствующих вайлов(так будет назван кэш), $extension - расширения файлов
 //[answer] пока нет
 */
-function setCache($code, $list, $extension){
+function setCache($code, $list, $name, $extension){
+	sort($name);
 	sort($list);
-	$name = md5(implode("",$list));
+	
+	$name = md5(implode("",$name));
 	$name .=$extension;
 	if(file_exists("__cache/$name"))return false;
 
@@ -74,8 +71,10 @@ function setCache($code, $list, $extension){
 	@fclose ($fp);
 	
 	$ini = @file_get_contents("__cache/b-cache.ini");
-	$ini = json_decode($ini);
-	$ini[] =array($name => $list);
+	var_dump($ini);
+	$ini = ($ini)?(array)json_decode($ini):array();
+	var_dump($ini);
+	$ini = array_merge($ini,array("b-/b-blib/__cache/".$name => $list));
 	$ini = json_encode($ini);
 	$fp = @fopen ("__cache/b-cache.ini", "w");
 	@fwrite ($fp, $ini);
