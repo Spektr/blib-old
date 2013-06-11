@@ -8,6 +8,7 @@ getCache(json_decode($_REQUEST['data']));
 */
 function getCache($types){
 	foreach($types as $key => $value){
+		$value = ($value)?$value:array();
 		sort($value);
 		$name = md5(implode("",$value));
 		$name .=".".$key;
