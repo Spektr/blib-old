@@ -1,13 +1,19 @@
-<center>
-    <a href="http://blib.xe0.ru" target="_blanck" style="text-decoration:none; float:left;">
-        <img src="http://blib.xe0.ru/index_logo.png">
-    </a>
-    <br />
-    <strong>
-        Библиотека автономных и полуавтономных блоков, которые можно впилить в любой интерфейс.
-    </strong>
-</center>
-<div style="width:100%; border:1px solid black;"></div>
+<table border=0>
+    <tr>
+        <td>
+            <a href="http://blib.xe0.ru" target="_blanck" style="text-decoration:none;">
+               <img src="http://blib.xe0.ru/index_logo.png" />
+            </a>
+        </td>
+        <td>
+            <strong>
+                Библиотека автономных и полуавтономных блоков, которые можно впилить в любой интерфейс.
+            </strong>
+        </td>
+    </tr>
+</table>
+<hr />
+
 <ul>
     <li>Есть как визуальные блоки для оформления чего-либо (например блок автогенерации таблицы из json-ответа сервера),</li>
     <li>так и блоки логики (b-blib - блок для подключения блоков)</li>
