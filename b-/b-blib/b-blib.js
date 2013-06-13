@@ -6,14 +6,50 @@ window.blib =(function(){
     var css = new Array();
 	var js = new Array();
 	
+	/*для работы с ajax*/
+	var $ = {};
+	$.ajax = function(dataObject) {
+		var xhr;
+		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
+		else if (window.ActiveXObject) {
+			try {
+				xhr = new ActiveXObject('Msxml2.XMLHTTP');
+			} catch (e){}
+			try {
+				xhr = new ActiveXObject('Microsoft.XMLHTTP');
+			} catch (e){}
+		}
+
+		if (xhr) {
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var rData = (dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
+					dataObject['success'](rData);
+				}
+			}
+			
+			xhr.open("POST", dataObject['url'], true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(dataObject['data']);
+	
+		} else {
+			alert("Браузер не поддерживает AJAX");
+		}
+	}
+	/*для работы с ajax*/
+
 	return {
 		//include css file
 		'css': function(cssFile, inCache){
-		
             cssFile = cssFile.toString();
+			
             for(key in css){
                 if(cssFile==css[key]){return true;}
             }
+			for(key in cssCache){
+                if(cssFile==cssCache[key]){return true;}
+            }
+			
 			var link  = document.createElement('link');
 			link.rel  = 'stylesheet';
 			link.type = 'text/css';
@@ -26,7 +62,6 @@ window.blib =(function(){
 				}else{
 					css.push(cssFile);
 				}
-				//0_0 убрать нули из массива
 				
 				if('localStorage' in window && window['localStorage'] !== null){
 					localStorage.setItem("cssCache", JSON.stringify(cssCache));
@@ -39,9 +74,14 @@ window.blib =(function(){
 		//include js file
 		'js': function(jsFile, inCache){
 			jsFile = jsFile.toString();
+			
 			for(key in js){
 				if(jsFile==js[key]){return true;}
 			}
+			for(key in jsCache){
+				if(jsFile==jsCache[key]){return true;}
+			}
+			
 			var script  = document.createElement('script');
 			script.src = jsFile;
 			script.type="text/javascript";
@@ -78,28 +118,23 @@ window.blib =(function(){
 			var variable = true;
 		},
 		
-		//0_0 create native realisation(whithout jquery)
 		'vanishLoad':function(){
-			if(!window.jQuery){	this.js('b-/b-jquery/b-jquery.js');}
 			var obj = this;
 			
 			//забиваем имеющиеся кеши
 			if('localStorage' in window && window['localStorage'] !== null){
-
+				
+				if(localStorage.getItem('css')){css=JSON.parse(localStorage.getItem('css'));}
 				var arr = JSON.parse(localStorage.getItem('cssCache'));
-				css.push(JSON.parse(localStorage.getItem('css')));
 				for(key in arr){
 					obj.css(arr[key], []);
 				}
-				
 
-				var arr = JSON.parse(localStorage.getItem('jsCache'));
-				js.push(JSON.parse(localStorage.getItem('js')));
+				if(localStorage.getItem('js')){js=JSON.parse(localStorage.getItem('js'));}
+				arr = JSON.parse(localStorage.getItem('jsCache'));
 				for(key in arr){
 					obj.js(arr[key], []);
 				}
-
-
 			}
 			
 			window.onload = function(){
@@ -117,8 +152,8 @@ window.blib =(function(){
 						obj.js(data['js']['path'], data['js']['list']);
 					}
 				});
-			}
-		}
+			}//window.onload
+		}//vanishLoad()
 		
-	};
+	};//return
 })(); 
