@@ -1,12 +1,12 @@
 <?php 
-getCache(json_decode($_REQUEST['data']));
+getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']));
 
 /*
 //выплевываем кэш по запросу от клиента
 //[param] $types - расширения файлов которые пользователь ожидает (css, js)
 //[answer] пока нет
 */
-function getCache($types){
+function getCache($types, $exception){
 	foreach($types as $key => $value){
 		$value = ($value)?$value:array();
 		sort($value);
@@ -15,7 +15,7 @@ function getCache($types){
 		$path="b-/b-blib/__cache/$name";
 		if(!file_exists("__cache/$name")){
 			$code = "";
-			$list =scan('../..','*.'.$key, $value, $code);
+			$list =scan('../..','*.'.$key, $value, $code, $exception);
 			setCache($code, $list, $value, '.'.$key);
 		}else{
 			$ini = @file_get_contents("__cache/b-cache.ini");
@@ -37,18 +37,18 @@ function getCache($types){
 //[param] $dir-директория , $mask-какие типы файлов склеивать, $exept - массив уже не нужных файлов, $code - куда поместить склееянный код
 //[answer] массив имен склеянных файлов, пишет код в $code
 */
-function scan($dir, $mask, $exept, &$code){
+function scan($dir, $mask, $exept, &$code, $badBlocks){
 	$d = array();
 	$arr = opendir($dir);
 	while($v = readdir($arr)){
-		if($v == '.' or $v == '..' or $v == 'b-blib') continue;
+		if($v == '.' or $v == '..' or $v == 'b-blib' or $v =='b-all-soft') continue;
 		if(!is_dir($dir.'/'.$v) && fnmatch($mask, $v)){
 			$temp = substr($dir.'/'.$v, 6);
 			if(in_array($temp, $exept))continue;
 			$d[] = $temp;		
 			$code .= @file_get_contents($dir.'/'.$v);
-		}elseif(is_dir($dir.'/'.$v)){
-			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code));
+		}elseif(is_dir($dir.'/'.$v) && !in_array($v, $badBlocks)){
+			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code, $badBlocks));
 		}
 	}
 	return $d;

@@ -6,9 +6,34 @@ window.blib =(function(){
     var css = new Array();
 	var js = new Array();
 	
-	/*для работы с ajax*/
-	var $ = {};
-	$.ajax = function(dataObject) {
+	/*jQuery simulate $() and $.ajax*/
+		var $ = function(){		
+		var els = document.getElementsByTagName('*');
+		var elsLen=els.length;
+		
+		var elements=new Array();
+		for(var i=0;i<arguments.length;i++){
+			var element=arguments[i];
+			
+			if(typeof element=='string' && element.substr(0,1)=="."){
+				var pattern=new RegExp(element.substr(1));
+				for(i=0;i<elsLen;i++){
+					if(pattern.test(els[i].className)){
+						elements.push(els[i]);
+					}
+				}
+				
+			}else if(typeof element=='string'){
+				element=document.getElementById(element)
+			};
+
+			if(arguments.length==1)return (elements)?elements:element;
+			elements.push(element);
+		}
+		return elements;
+	};
+	
+	var ajax = function(dataObject) {
 		var xhr;
 		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
 		else if (window.ActiveXObject) {
@@ -36,7 +61,8 @@ window.blib =(function(){
 			alert("Браузер не поддерживает AJAX");
 		}
 	}
-	/*для работы с ajax*/
+	$.ajax = ajax;
+	/*jQuery simulate $() and $.ajax*/
 
 	return {
 		//include css file
@@ -101,14 +127,23 @@ window.blib =(function(){
 			return true;
 		},
 
-        //include block (file - block's url [, target] - where it's plased) //0_0 create native realisation(whithout jquery) + test + cache
+        //include block (file - block's url [, target] - where it's plased)
 		'include':function(file, target){
 			var obj = this;
 			this.css(file+'.css');
-			if(!window.jQuery){	this.js('b-/b-jquery/b-jquery.js');}
+
 			if(target){
 				var target = $(target);
-				target.load(file+'.html', function(){ obj.js(file+'.js');});
+				$.ajax({
+					url:file+'.html',
+					dataType: "html",
+					success: function(data){
+						for(key in target){
+							target[key].innerHTML=data;
+						}
+						obj.js(file+'.js');
+					}
+				});
 			}else{
 				document.addEventListener("DOMContentLoaded", function(){ obj.js(file+'.js');}, false );
 			}
@@ -118,7 +153,7 @@ window.blib =(function(){
 			var variable = true;
 		},
 		
-		'vanishLoad':function(){
+		'vanishLoad':function(dataObject){
 			var obj = this;
 			
 			//забиваем имеющиеся кеши
@@ -138,12 +173,13 @@ window.blib =(function(){
 			}
 			
 			window.onload = function(){
-				var requestData ={'css':css, 'js':js};
+				var requestData = (dataObject['requestData'])?"data="+JSON.stringify(dataObject['requestData']):"data="+JSON.stringify({'css':css, 'js':js});
+				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"";
 				console.log(requestData);
-
+				
 				$.ajax({
 					url:'/b-/b-blib/b-blib.php',
-					data:"data="+JSON.stringify(requestData),
+					data:requestData,
 					dataType: "json",
 					success: function(data){
 						if(!data['status']){return false;}
