@@ -155,24 +155,24 @@ window.blib =(function(){
 		
 		'vanishLoad':function(dataObject){
 			var obj = this;
-			
-			//забиваем имеющиеся кеши
-			if('localStorage' in window && window['localStorage'] !== null){
-				
-				if(localStorage.getItem('css')){css=JSON.parse(localStorage.getItem('css'));}
-				var arr = JSON.parse(localStorage.getItem('cssCache'));
-				for(key in arr){
-					obj.css(arr[key], []);
+			document.addEventListener("DOMContentLoaded", function(){
+				//забиваем имеющиеся кеши
+				if('localStorage' in window && window['localStorage'] !== null){
+					
+					if(localStorage.getItem('css')){css=JSON.parse(localStorage.getItem('css'));}
+					var arr = JSON.parse(localStorage.getItem('cssCache'));
+					for(key in arr){
+						obj.css(arr[key], []);
+					}
+	
+					if(localStorage.getItem('js')){js=JSON.parse(localStorage.getItem('js'));}
+					arr = JSON.parse(localStorage.getItem('jsCache'));
+					for(key in arr){
+						obj.js(arr[key], []);
+					}
 				}
-
-				if(localStorage.getItem('js')){js=JSON.parse(localStorage.getItem('js'));}
-				arr = JSON.parse(localStorage.getItem('jsCache'));
-				for(key in arr){
-					obj.js(arr[key], []);
-				}
-			}
 			
-			window.onload = function(){
+			
 				var requestData = (dataObject['requestData'])?"data="+JSON.stringify(dataObject['requestData']):"data="+JSON.stringify({'css':css, 'js':js});
 				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"";
 				console.log(requestData);
@@ -188,7 +188,7 @@ window.blib =(function(){
 						obj.js(data['js']['path'], data['js']['list']);
 					}
 				});
-			}//window.onload
+			}, false );//DOMContentLoaded
 		}//vanishLoad()
 		
 	};//return
