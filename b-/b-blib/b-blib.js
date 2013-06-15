@@ -100,7 +100,7 @@ window.blib =(function(){
 		//include js file
 		'js': function(jsFile, inCache){
 			jsFile = jsFile.toString();
-			
+
 			for(key in js){
 				if(jsFile==js[key]){return true;}
 			}

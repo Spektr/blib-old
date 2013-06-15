@@ -1,5 +1,3 @@
-blib.css('/b-/b-train/b-train.css');
-
 $(document).ready(function(){
 	/*наведение на иконки платежных систем*/
 	$('.b-train__item').on('mouseover', function(){
