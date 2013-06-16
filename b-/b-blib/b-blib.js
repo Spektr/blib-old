@@ -136,7 +136,7 @@ window.blib =(function(){
 				var target = $(target);
 				$.ajax({
 					url:file+'.html',
-					dataType: "html",
+                    dataType: "html",
 					success: function(data){
 						for(key in target){
 							target[key].innerHTML=data;
@@ -145,7 +145,7 @@ window.blib =(function(){
 					}
 				});
 			}else{
-				document.addEventListener("DOMContentLoaded", function(){ obj.js(file+'.js');}, false );
+				/*document.addEventListener("DOMContentLoaded", function(){ */obj.js(file+'.js');/*}, false );*/
 			}
 		},
 		
