@@ -1,12 +1,12 @@
 <?php 
-getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']));
+getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']), json_decode($_REQUEST['order']));
 
 /*
 //выплевываем кэш по запросу от клиента
 //[param] $types - расширения файлов которые пользователь ожидает (css, js)
 //[answer] пока нет
 */
-function getCache($types, $exception){
+function getCache($types, $exception, $order){
 	foreach($types as $key => $value){
 		$value = ($value)?$value:array();
 		sort($value);
@@ -15,7 +15,8 @@ function getCache($types, $exception){
 		$path="b-/b-blib/__cache/$name";
 		if(!file_exists("__cache/$name")){
 			$code = "";
-			$list =scan('../..','*.'.$key, $value, $code, $exception);
+			$list =scan('../..','*.'.$key, $value, $code, $exception, $order);
+			$code = array_merge(implode($order), $code);
 			setCache($code, $list, $value, '.'.$key);
 		}else{
 			$ini = @file_get_contents("__cache/b-cache.ini");
@@ -37,7 +38,7 @@ function getCache($types, $exception){
 //[param] $dir-директория , $mask-какие типы файлов склеивать, $exept - массив уже не нужных файлов, $code - куда поместить склееянный код
 //[answer] массив имен склеянных файлов, пишет код в $code
 */
-function scan($dir, $mask, $exept, &$code, $badBlocks){
+function scan($dir, $mask, $exept, &$code, $badBlocks, &$order){
 	$d = array();
 	$arr = opendir($dir);
 	while($v = readdir($arr)){
@@ -45,10 +46,16 @@ function scan($dir, $mask, $exept, &$code, $badBlocks){
 		if(!is_dir($dir.'/'.$v) && fnmatch($mask, $v)){
 			$temp = substr($dir.'/'.$v, 6);
 			if(in_array($temp, $exept))continue;
-			$d[] = $temp;		
-			$code .= @file_get_contents($dir.'/'.$v);
+			$d[] = $temp;
+			foreach($order as $key =>$value){
+				if($temp == $value){
+					$order[$key]=@file_get_contents($dir.'/'.$v);
+				}else{
+					$code .= @file_get_contents($dir.'/'.$v);
+				}
+			}
 		}elseif(is_dir($dir.'/'.$v) && !in_array($v, $badBlocks)){
-			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code, $badBlocks));
+			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code, $badBlocks, $order));
 		}
 	}
 	return $d;

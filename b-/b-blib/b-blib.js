@@ -175,6 +175,7 @@ window.blib =(function(){
 			
 				var requestData = (dataObject['requestData'])?"data="+JSON.stringify(dataObject['requestData']):"data="+JSON.stringify({'css':css, 'js':js});
 				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"";
+                requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
 				console.log(requestData);
 				
 				$.ajax({
