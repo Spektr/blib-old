@@ -7,6 +7,7 @@ getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']), js
 //[answer] пока нет
 */
 function getCache($types, $exception, $order){
+	$order['code'] = array();
 	foreach($types as $key => $value){
 		$value = ($value)?$value:array();
 		sort($value);
@@ -16,17 +17,21 @@ function getCache($types, $exception, $order){
 		if(!file_exists("__cache/$name")){
 			$code = "";
 			$list =scan('../..','*.'.$key, $value, $code, $exception, $order);
-			$code = array_merge(implode($order), $code);
+			$code = implode($order['code']).$code;
+			
 			setCache($code, $list, $value, '.'.$key);
 		}else{
 			$ini = @file_get_contents("__cache/b-cache.ini");
 			$ini = (array)json_decode($ini);
 			$list = $ini[$path];
 		}
-
-		$answer['status']=true;
-		$answer[$key]['path']= $path;
-		$answer[$key]['list']= $list;
+		
+		$answer['status']=false;
+		if(!empty($list)){
+			$answer['status']=true;
+			$answer[$key]['path']= $path;
+			$answer[$key]['list']= $list;
+		}
 	}
 	
 	echo json_encode($answer);
@@ -42,17 +47,16 @@ function scan($dir, $mask, $exept, &$code, $badBlocks, &$order){
 	$d = array();
 	$arr = opendir($dir);
 	while($v = readdir($arr)){
-		if($v == '.' or $v == '..' or $v == 'b-blib' or $v =='b-all-soft') continue;
+		if($v == '.' or $v == '..' or $v == 'b-blib') continue;
 		if(!is_dir($dir.'/'.$v) && fnmatch($mask, $v)){
 			$temp = substr($dir.'/'.$v, 6);
 			if(in_array($temp, $exept))continue;
 			$d[] = $temp;
-			foreach($order as $key =>$value){
-				if($temp == $value){
-					$order[$key]=@file_get_contents($dir.'/'.$v);
-				}else{
-					$code .= @file_get_contents($dir.'/'.$v);
-				}
+			$key = array_search($temp, $order);
+			if($key!==false){
+				$order['code'][$key]=@file_get_contents($dir.'/'.$v);
+			}else{
+				$code .= @file_get_contents($dir.'/'.$v);
 			}
 		}elseif(is_dir($dir.'/'.$v) && !in_array($v, $badBlocks)){
 			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code, $badBlocks, $order));

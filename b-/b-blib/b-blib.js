@@ -100,15 +100,23 @@ window.blib =(function(){
 		//include js file
 		'js': function(jsFile, inCache){
 			jsFile = jsFile.toString();
-
+			
 			for(key in js){
-				if(jsFile==js[key]){return true;}
+				if(jsFile==js[key]){
+					delete js[key];
+					var addededScript = document.getElementById(jsFile);
+					if(addededScript){						
+						addededScript.parentNode.removeChild(addededScript);
+					}
+				}
 			}
+			
 			for(key in jsCache){
 				if(jsFile==jsCache[key]){return true;}
 			}
 			
 			var script  = document.createElement('script');
+			script.id = jsFile;
 			script.src = jsFile;
 			script.type="text/javascript";
 			if(head.appendChild(script)){
@@ -171,11 +179,10 @@ window.blib =(function(){
 						obj.js(arr[key], []);
 					}
 				}
-			
-			
+				
 				var requestData = (dataObject['requestData'])?"data="+JSON.stringify(dataObject['requestData']):"data="+JSON.stringify({'css':css, 'js':js});
-				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"";
-                requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
+				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"&exception="+JSON.stringify([]);
+				requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
 				console.log(requestData);
 				
 				$.ajax({
@@ -189,6 +196,7 @@ window.blib =(function(){
 						obj.js(data['js']['path'], data['js']['list']);
 					}
 				});
+				
 			}, false );//DOMContentLoaded
 		}//vanishLoad()
 		
