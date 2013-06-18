@@ -9,7 +9,8 @@ getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']), js
 function getCache($types, $exception, $order){
 	$order['code'] = array();
 	foreach($types as $key => $value){
-		$value = ($value)?$value:array();
+		$value = ($value=="orderOnly")?array("orderOnly"):$value;
+		$value = (is_array($value))?$value:array();
 		sort($value);
 		$name = md5(implode("",$value));
 		$name .=".".$key;
@@ -18,7 +19,6 @@ function getCache($types, $exception, $order){
 			$code = "";
 			$list =scan('../..','*.'.$key, $value, $code, $exception, $order);
 			$code = implode($order['code']).$code;
-			
 			setCache($code, $list, $value, '.'.$key);
 		}else{
 			$ini = @file_get_contents("__cache/b-cache.ini");
@@ -44,6 +44,7 @@ function getCache($types, $exception, $order){
 //[answer] массив имен склеянных файлов, пишет код в $code
 */
 function scan($dir, $mask, $exept, &$code, $badBlocks, &$order){
+	$orderOnly = ($exept[0]=="orderOnly")?true:false;
 	$d = array();
 	$arr = opendir($dir);
 	while($v = readdir($arr)){
@@ -51,12 +52,14 @@ function scan($dir, $mask, $exept, &$code, $badBlocks, &$order){
 		if(!is_dir($dir.'/'.$v) && fnmatch($mask, $v)){
 			$temp = substr($dir.'/'.$v, 6);
 			if(in_array($temp, $exept))continue;
-			$d[] = $temp;
+
 			$key = array_search($temp, $order);
 			if($key!==false){
 				$order['code'][$key]=@file_get_contents($dir.'/'.$v);
-			}else{
+				$d[] = $temp;
+			}elseif(!$orderOnly){
 				$code .= @file_get_contents($dir.'/'.$v);
+				$d[] = $temp;
 			}
 		}elseif(is_dir($dir.'/'.$v) && !in_array($v, $badBlocks)){
 			$d = array_merge($d, scan($dir.'/'.$v, $mask, $exept, $code, $badBlocks, $order));
@@ -83,9 +86,7 @@ function setCache($code, $list, $name, $extension){
 	@fclose ($fp);
 	
 	$ini = @file_get_contents("__cache/b-cache.ini");
-	var_dump($ini);
 	$ini = ($ini)?(array)json_decode($ini):array();
-	var_dump($ini);
 	$ini = array_merge($ini,array("b-/b-blib/__cache/".$name => $list));
 	$ini = json_encode($ini);
 	$fp = @fopen ("__cache/b-cache.ini", "w");

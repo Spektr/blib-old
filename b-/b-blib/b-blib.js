@@ -103,7 +103,7 @@ window.blib =(function(){
 			
 			for(key in js){
 				if(jsFile==js[key]){
-					delete js[key];
+					js.splice(key,1);
 					var addededScript = document.getElementById(jsFile);
 					if(addededScript){						
 						addededScript.parentNode.removeChild(addededScript);
@@ -112,7 +112,7 @@ window.blib =(function(){
 			}
 			
 			for(key in jsCache){
-				if(jsFile==jsCache[key]){return true;}
+				if(jsFile==jsCache[key]){return this;}
 			}
 			
 			var script  = document.createElement('script');
@@ -132,7 +132,7 @@ window.blib =(function(){
 					localStorage.setItem("js", JSON.stringify(js));
 				}
 			}
-			return true;
+			return this;
 		},
 
         //include block (file - block's url [, target] - where it's plased)
@@ -161,6 +161,11 @@ window.blib =(function(){
 			var variable = true;
 		},
 		
+		/*
+		//method for load all stylesheet/script in one file
+		//[param]{'script':(bool) - for glue javascripts, 'exception':(array) - blocks which will not be uploaded, 'order': (array of paths) - first turn load sctipts/if 'script' is false, then 'order' set chosen blocks }
+		//
+		*/
 		'vanishLoad':function(dataObject){
 			var obj = this;
 			document.addEventListener("DOMContentLoaded", function(){
@@ -180,7 +185,8 @@ window.blib =(function(){
 					}
 				}
 				
-				var requestData = (dataObject['requestData'])?"data="+JSON.stringify(dataObject['requestData']):"data="+JSON.stringify({'css':css, 'js':js});
+
+				var requestData = "data="+JSON.stringify((dataObject['script']?{'css':css, 'js':js}:{'css':css, 'js':"orderOnly"}));
 				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"&exception="+JSON.stringify([]);
 				requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
 				console.log(requestData);
@@ -192,8 +198,8 @@ window.blib =(function(){
 					success: function(data){
 						if(!data['status']){return false;}
 						console.log(data);
-						obj.css(data['css']['path'], data['css']['list']);
-						obj.js(data['js']['path'], data['js']['list']);
+						if(data['css']){obj.css(data['css']['path'], data['css']['list']);}
+						if(data['js']){obj.js(data['js']['path'], data['js']['list']);}
 					}
 				});
 				
