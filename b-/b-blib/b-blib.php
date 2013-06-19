@@ -18,6 +18,7 @@ function getCache($types, $exception, $order){
 		if(!file_exists("__cache/$name")){
 			$code = "";
 			$list =scan('../..','*.'.$key, $value, $code, $exception, $order);
+			ksort($order['code']);
 			$code = implode($order['code']).$code;
 			setCache($code, $list, $value, '.'.$key);
 		}else{
