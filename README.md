@@ -60,17 +60,17 @@
     <tr><th colspan="2">дополнительные методы</th></tr>
     <tr></tr>
     <tr>
-		<td rowspan="2">blib.vanishLoad({'script':(bool), 'exception':(array), 'order': (array)})</td>
+		<td rowspan="2">blib.vanishLoad({<br />'script':(bool),<br />'exception':(array),<br />'order': (array)<br />})</td>
 		<td>
 			Метод для склейки и кеширования файлов (стилей и скриптов) решение о подгрузке принимается на основе данных localStotage
 		</td>
     </tr>
     <tr>
        <td>
-        {
-		 script - грузить ли сразу все скрипты или только перечисленные в order,<br />
-		 exception - блоки которые надо игнорировать при сборке кеша (не относящиеся к методологии написания сайта),<br />
-		 order - порядок склейки блоков (напр. jQuery надо подрубать раньше jQuery-ui) если script=false, то это единственные блоки для кэширования
+        {<br />
+		 script - грузить все скрипты или только прописанные в order,<br />
+		 exception - блоки которые надо игнорировать при сборке кеша,<br />
+		 order - порядок склейки блоков (jQuery раньше jQuery-ui)<br />
 		}
        </td>
     </tr>
