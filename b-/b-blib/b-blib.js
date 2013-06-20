@@ -35,6 +35,7 @@ window.blib =(function(){
 	
 	var ajax = function(dataObject) {
 		var xhr;
+		dataObject['type']=(typeof(dataObject['type'])!= "undefined")?dataObject['type']:"POST";
 		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
 		else if (window.ActiveXObject) {
 			try {
@@ -53,8 +54,12 @@ window.blib =(function(){
 				}
 			}
 			
-			xhr.open("POST", dataObject['url'], true);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.open(dataObject['type'], dataObject['url'], true);
+			if(dataObject['type']=="POST"){				
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			}else if(dataObject['dataType']=="html"){
+				xhr.setRequestHeader("Content-Type", "text/html");
+			}
 			xhr.send(dataObject['data']);
 	
 		} else {
