@@ -3,13 +3,16 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Blocks library</title>
-    <script type="text/javascript" src="b-/b-blib/b-blib.js"></script>
-
+	<script type="text/javascript" src="b-/b-jquery/b-jquery.js">/*  <-  еслиб настройки были нормальные этих инклюдов небыло бы*/</script>			 
+	<script type="text/javascript" src="b-/b-jquery-ui/b-jquery-ui.js">/*  <-  еслиб настройки были нормальные этих инклюдов небыло бы*/</script>
+	<script type="text/javascript" src="b-/b-blib/b-blib.js"></script>
 </head>
 <script>
-    blib.vanishLoad({'script':false, 'order':["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js", "p-/b-index/b-index.js"]});
+	blib.include("p-/b-index/b-index");/*  <-  еслиб настройки были нормальные этих инклюдов небыло бы*/
+	// хорошая безопасность хостинга - залог бесполезного кода
+	// blib.vanishLoad({'script':false, 'order':["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js", "p-/b-index/b-index.js"]});
 </script>
 <body class="b-blib">
-	<div  class="b-blib__header">Библиотека функциональных блоков и элементов интерфейса</div>
+	
 </body>
 </html>
