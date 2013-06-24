@@ -34,6 +34,7 @@ $(function(){
     addBlock("b-blib__train", "b-/b-train/b-train.html", "Подложка для иконок", "Фон в виде рисунка в основе лежит блок с дублирующимся бекграундом и псевдоклассами before и after для прорисовки боков",["jquery", "css3"]);
     addBlock("b-blib__popup-menu", "p-/b-popup-menu/b-popup-menu.html", "Комбинация блоков всплывающего окна и меню", "Создание анимации используя плавную замену классов",["jq-ui", "jquery", "css3"]);
 	addBlock("b-blib__table", "b-/b-table/b-table.html", "Блок динамической генерации таблицы", "Описание",["jquery"]);
+	addBlock("b-blib__pic", "b-/b-pic/b-pic.html", "Картинки", "Описание",["css3"]);
 	
 
 });
