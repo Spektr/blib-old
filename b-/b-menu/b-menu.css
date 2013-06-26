@@ -34,6 +34,7 @@
     width:45px;
 }
 .b-memu__selected-cell .b-menu__cell[alt]:after{
+	border: 1px solid #c8c5c2;
     width:85px;
 }
 
@@ -64,15 +65,12 @@
     text-align: center;
     padding-top: 10px;
 
-    color: #ffffff;
     background: inherit;
-    text-shadow: 1px 1px 2px black;
     -webkit-transition: all 0.5s ease;/*расширить кросбраузерно*/
-
 }
 .b-menu__cell:hover:after{
     width: 85px;
-    border: 1px solid #c8c5c2;
+	border: 1px solid #c8c5c2;
     border-left: none;
 }
 
@@ -82,10 +80,11 @@
     margin: 0px 0px 0px 0px;
 }
 
-.b-menu__cell_active{
+.b-menu__cell_active, .b-menu__cell_active span:before{
     width:0px;
 }
 .b-menu__cell_active[alt]:after{
+	border: 1px solid #c8c5c2;
     width:85px;
 }
 /*for cell*/

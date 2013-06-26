@@ -5,9 +5,6 @@
 .b-popup-menu__content{
     margin: 0 0 5px 0;
     overflow: hidden;
-
-    background: #b4b1ae;
-    border: 1px solid #999999;
 }
 .b-popup-menu__content_closed{
     height: 0px;
@@ -15,20 +12,49 @@
 .b-popup-menu__content_closed div{
     display: none;
 }
-
 .b-popup-menu__opener{
     margin: 2px;
-
-    background: #b4b1ae;
-    border: 1px solid #999999;
-
     text-align: center;
-
     cursor: pointer;
 }
-.b-popup-menu__opener:hover{
+
+/*стили по дефолту*/
+.b-popup-menu_style_default .b-popup-menu__content{
+	background: #b4b1ae;
+	border: 1px solid #999999;
+}
+.b-popup-menu_style_default  .b-popup-menu__opener{
+    background: #b4b1ae;
+    border: 1px solid #999999;
+}
+.b-popup-menu_style_default  .b-popup-menu__opener:hover{
     text-shadow: 0px 0px 2px white;
 }
-.b-popup-menu__opener:active{
+.b-popup-menu_style_default  .b-popup-menu__opener:active{
     background: #9e9b98;
 }
+/*стили по дефолту*/
+
+/*стили для амтел*/
+.b-popup-menu_style_amtel .b-popup-menu__content{
+	background: #ffffff;
+	border: 1px solid #FF6600;
+	border-top:none;
+}
+.b-popup-menu_style_amtel  .b-popup-menu__opener{
+	color: #FF0000;
+    background: #ffffff;
+    border: 1px solid #FF6600;
+}
+.b-popup-menu_style_amtel  .b-popup-menu__opener:hover{
+    text-shadow: 0px 0px 2px white;
+}
+.b-popup-menu_style_amtel  .b-popup-menu__opener:active{
+    background: #FF9933;
+}
+.b-popup-menu_style_amtel .b-menu__cell[alt]:after{
+	color: #FF6600;
+	background: inherit;
+	text-shadow: 1px 1px 1px rgb(209, 209, 209);
+}
+/*стили для амтел*/
