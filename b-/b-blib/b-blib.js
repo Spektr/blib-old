@@ -7,7 +7,7 @@ window.blib =(function(){
 	var js = new Array();
 	
 	/*jQuery simulate $() and $.ajax*/
-		var $ = function(){		
+	var $ = function(){		
 		var els = document.getElementsByTagName('*');
 		var elsLen=els.length;
 		
@@ -35,7 +35,6 @@ window.blib =(function(){
 	
 	var ajax = function(dataObject) {
 		var xhr;
-		dataObject['type']=(typeof(dataObject['type'])!= "undefined")?dataObject['type']:"POST";
 		if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
 		else if (window.ActiveXObject) {
 			try {
@@ -54,13 +53,15 @@ window.blib =(function(){
 				}
 			}
 			
-			xhr.open(dataObject['type'], dataObject['url'], true);
-			if(dataObject['type']=="POST"){				
+			if(dataObject['dataType']!="html"){
+				xhr.open("POST", dataObject['url'], true);
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			}else if(dataObject['dataType']=="html"){
+				xhr.send(dataObject['data']);
+			}else{
+				xhr.open("GET", dataObject['url'], true);
 				xhr.setRequestHeader("Content-Type", "text/html");
+				xhr.send(dataObject['data']);
 			}
-			xhr.send(dataObject['data']);
 	
 		} else {
 			alert("Браузер не поддерживает AJAX");
@@ -194,7 +195,6 @@ window.blib =(function(){
 				var requestData = "data="+JSON.stringify((dataObject['script']?{'css':css, 'js':js}:{'css':css, 'js':"orderOnly"}));
 				requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"&exception="+JSON.stringify([]);
 				requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
-				console.log(requestData);
 				
 				$.ajax({
 					url:'/b-/b-blib/b-blib.php',
@@ -202,7 +202,6 @@ window.blib =(function(){
 					dataType: "json",
 					success: function(data){
 						if(!data['status']){return false;}
-						console.log(data);
 						if(data['css']){obj.css(data['css']['path'], data['css']['list']);}
 						if(data['js']){obj.js(data['js']['path'], data['js']['list']);}
 					}
