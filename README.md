@@ -75,8 +75,8 @@
        </td>
     </tr>
     <tr>
-        <td rowspan="2">blib.checkCache()</td>
-        <td>(в разработке) проверка кэша</td>
+        <td rowspan="2">processor()</td>
+        <td>(в разработке) для сборки дом дерева</td>
     </tr>
     <tr>
         <td>
