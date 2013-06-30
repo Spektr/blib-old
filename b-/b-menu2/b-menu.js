@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	
-	bProcessor("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
-	bProcessor({'a':"menu"});	//ну и посылаем этот запрос
+	blib.build("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
+    blib.build({'a':"menu"});	//ну и посылаем этот запрос
 	
 	//функция создания меню из переданных данных
 	function createMenu(data){
@@ -35,7 +35,7 @@ $(document).ready(function(){
 					 //подрубаем блок
 					if($('.b-memu__content')[0]){
 						var block = $(this).attr("data-action");
-						bProcessor({'a':block});
+                        blib.build({'a':block});
 					}
 					return false;
 			}

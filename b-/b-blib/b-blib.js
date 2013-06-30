@@ -5,6 +5,15 @@ window.blib =(function(){
 	var jsCache = new Array();
     var css = new Array();
 	var js = new Array();
+
+    //for blib.build
+    var constructors ={};
+    this.setConstructor = function(key, func){
+        constructors[key]=func;
+    }
+    this.applyConstructor = function(key, data){
+        (key in constructors)?constructors[key](data):console.log(key+" is not defined");
+    }
 	
 	/*jQuery simulate $() and $.ajax*/
 	var $ = function(){		
@@ -163,9 +172,31 @@ window.blib =(function(){
 			}
 		},
 		
-		'checkCache':function(){
-			var variable = true;
-		},
+		'build':function(dataObject, callback){
+
+            if((typeof callback === "function") && (typeof dataObject === "string")){
+                self.setConstructor(dataObject, callback);
+                return true;
+            }
+
+            var serializeData = (dataObject)?"?":"";
+            for(key in dataObject){
+                serializeData+=key+"="+dataObject[key]+"&";
+            }
+            serializeData = serializeData.substr(0, serializeData.length-1);
+
+            $.ajax({
+                url:"b-/b-blib/b-blib_build.php",
+                data:serializeData,
+                dataType: "json",
+                success: function(data){
+                    if(!data['status']){return false;}
+                    for(key in data['structure']){
+                        applyConstructor(key, data['structure'][key]);
+                    }
+                }
+            });
+        },
 		
 		/*
 		//method for load all stylesheet/script in one file
