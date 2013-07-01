@@ -1,0 +1,139 @@
+<?php
+
+switch($_REQUEST['a']){
+	case "menu":
+		$answer = array(
+			"status"=>true,
+			"message"=>"Менюшка сгенерилась",
+			"structure"=>array(
+				"menu"=>array(
+				  'class'=>"b-menu_amtel",
+				  'place'=>".b-menu",
+				  array(
+					"description"=>"клиенты",
+					"action"=>"client"
+				  ),
+				  array(
+					"description"=>"агенты",
+					"action"=>"agent"
+				  ),
+				  array(
+					"description"=>"спутники",
+					"action"=>"satellist"
+				  ),
+				  array(
+					"description"=>"станции",
+					"action"=>"station"
+				  ),
+				  array(
+					"description"=>"1С",
+					"action"=>"one_s"
+				  ),
+				  array(
+					"description"=>"статистика",
+					"action"=>"statistic"
+				  ),
+				  array(
+					"description"=>"плат.карты",
+					"action"=>"cardgen"
+				  ),
+				  array(
+					"description"=>"тарифы",
+					"action"=>"tarifs"
+				  )
+				)
+			)
+		);
+	break;
+	case "client":
+		$answer = array(
+			"status"=>true,
+			"message"=>"Клиенты",
+			"structure"=>array(
+				"table"=>array(
+				  'place'=>".b-memu__content",
+				  array(
+					"description"=>"клиенты",
+					"action"=>"client"
+				  ),
+				  array(
+					"description"=>"агенты",
+					"action"=>"agent"
+				  ),
+				  array(
+					"description"=>"спутники",
+					"action"=>"satellist"
+				  ),
+				  array(
+					"description"=>"станции",
+					"action"=>"station"
+				  ),
+				  array(
+					"description"=>"1С",
+					"action"=>"one_s"
+				  ),
+				  array(
+					"description"=>"статистика",
+					"action"=>"statistic"
+				  ),
+				  array(
+					"description"=>"плат.карты",
+					"action"=>"cardgen"
+				  ),
+				  array(
+					"description"=>"тарифы",
+					"action"=>"tarifs"
+				  )
+				)
+			)
+		);
+	break;
+	
+	default:
+		$answer = array(
+			"status"=>true,
+			"message"=>"Прочая хрень",
+			"structure"=>array(
+				"table"=>array(
+				  'place'=>".b-memu__content",
+				  array(
+					"description"=>"клиенты",
+					"action"=>"client"
+				  ),
+				  array(
+					"description"=>"агенты",
+					"action"=>"agent"
+				  ),
+				  array(
+					"description"=>"спутники",
+					"action"=>"satellist"
+				  ),
+				  array(
+					"description"=>"станции",
+					"action"=>"station"
+				  ),
+				  array(
+					"description"=>"1С",
+					"action"=>"one_s"
+				  ),
+				  array(
+					"description"=>"статистика",
+					"action"=>"statistic"
+				  ),
+				  array(
+					"description"=>"плат.карты",
+					"action"=>"cardgen"
+				  ),
+				  array(
+					"description"=>"тарифы",
+					"action"=>"tarifs"
+				  )
+				)
+			)
+		);
+	break;
+
+}
+
+echo json_encode($answer);
+?>
