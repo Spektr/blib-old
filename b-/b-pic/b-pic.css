@@ -48,7 +48,7 @@
 	height:45px;
 	background-position: -315px 0;
 }
-.b-pic__amtel_ones:before{
+.b-pic__amtel_one-s:before{
 	width:45px;
 	height:45px;
 	background-position: -360px 0;
@@ -84,7 +84,7 @@
 .b-pic__amtel_sms:before{
 	background-position: -100px -45px;
 }
-.b-pic__amtel_ones-mini:before{
+.b-pic__amtel_one-s-mini:before{
 	background-position: -125px -45px;
 }
 .b-pic__amtel_group-mail:before{

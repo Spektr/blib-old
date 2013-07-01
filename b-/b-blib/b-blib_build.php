@@ -22,7 +22,7 @@
 		  },
 		  {
 			"description":"1С",
-			"action":"ones"
+			"action":"one_s"
 		  },
 		  {
 			"description":"статистика",
