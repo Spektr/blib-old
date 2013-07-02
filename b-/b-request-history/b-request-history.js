@@ -1,7 +1,9 @@
 $(function(){
 	
-	blib.build("requestHistory", requestHistory);
+	var div = $('.b-request-history')[0];				//блок где строиться история
+	blib.build("requestHistory", requestHistory);		//передаем обработчик ответа сервера для создания 
 	
+	//собственно сам обработчик
 	function requestHistory(message){
 		var statusLink = $('<a />', {'href':"#",'class':"b-request-history__link", 'text':message});
 		
@@ -11,6 +13,7 @@ $(function(){
 		});
 		
 		$('.b-request-history').append(statusLink);
-		
+		div.scrollLeft = div.scrollWidth - div.offsetWidth;
 	}
+
 });
