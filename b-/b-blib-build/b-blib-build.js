@@ -12,21 +12,28 @@
 		iterations[index]=[];
 		iterations[index]['request'] = request;
 		iterations[index]['answer'] = answer;
-		console.log(iterations);
 	}
 	var clearIteration = function(index){
 		iterations = iterations.slice(0, index);
-		console.log(iterations);
 		
 		var data = iterations[index-1]['answer'];
 		if(!data['status']){return false;}
 		for(key in data['structure']){
-			applyConstructor(key, data['structure'][key]);
+			applyConstructor(data['structure'][key]['type'], data['structure'][key]);
 		}
 		
 	}
 		
 	window.blib.build = function(dataObject, callback){
+		/*хрень для истории*/
+		if(dataObject['title']){
+			var historyName = dataObject['title'];
+			delete dataObject['title'];
+		}else{
+			var historyName = "X";
+		}
+		/*хрень для истории*/
+		
 		if((typeof callback === "function") && (typeof dataObject === "string")){
 			setConstructor(dataObject, callback);
 			return true;
@@ -43,9 +50,9 @@
 			success: function(data){
 				if(!data['status']){return false;}
 				satIteration(dataObject, data);
-				applyConstructor("requestHistory", data['message']);
+				applyConstructor("requestHistory", historyName); /*хрень для истории*/
 				for(key in data['structure']){
-					applyConstructor(key, data['structure'][key]);
+					applyConstructor(data['structure'][key]['type'], data['structure'][key]);
 				}
 			}
 		});
@@ -57,3 +64,5 @@
 	
 })(); 
 
+//added dynamic blocks
+blib.include("b-/b-dynamic-form/b-dynamic-form");

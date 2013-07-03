@@ -1,0 +1,60 @@
+$(function(){
+	
+	blib.build("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
+    
+		
+	//функция создания меню из переданных данных
+	function createMenu(data){
+		if(!data){return false;}
+		var result = [];
+		
+		//обрабатываем серверный ответ
+		for(var i=0; i<data['items'].length; i++){
+			var div = $('<div />', {'class':"b-dynamic-menu__cell", 'alt': data['items'][i]['title'], 'data-action':data['items'][i]['action']});
+			var span = $('<span />', {'class':"b-pic b-pic__amtel b-pic__amtel_"+data['items'][i]['action'].replace(/\_/g, '-')});
+			div.append(span);
+			result.push(div);
+		}
+		//куда будет загружен
+		var place = data['place']||'.b-dynamic-menu';
+		$(place).html(result);
+		//каким классом оформлен
+		if(data['class']){$(place).addClass(data['class']);};
+
+		
+		$('.b-dynamic-menu__cell').on('click', function(){
+			//заглушка чтоб не сбивалась анимация
+			if($('.b-dynamic-menu__cell:animated')[0]){
+				return false;
+			}
+			
+			//визуально оформляем
+			if(data['animated']){
+				$(this).toggleClass("b-dynamic-menu__cell_active", 1500);
+				$('.b-dynamic-menu__cell').not(this).removeClass("b-dynamic-menu__cell_active",1500);
+			}
+			
+			//пихаем в доп окно клона выбранного пункта меню
+			$('.b-dynamic-menu__selected-cell').html("");
+			if(!$(this).hasClass("b-dynamic-menu__cell_active")){
+				$(this)
+					.clone()
+					.on('click',function(){
+						$('.b-dynamic-menu__cell_active').click();
+					})
+					.appendTo('.b-dynamic-menu__selected-cell');
+					
+					//подрубаем блок
+					var block = $(this).attr("data-action");
+					var title = $(this).attr("alt");
+					blib.build({'a':block, 'title':title});
+					
+					return false;
+			}
+			
+			
+		});
+	}//createMenu
+
+
+});
