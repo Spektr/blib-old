@@ -1,28 +1,13 @@
 $(function(){
 	
 	blib.build("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
-    
+    blib.build({'a':"menu", 'title':"Менюшка"});	//ну и посылаем этот запрос
 		
 	//функция создания меню из переданных данных
 	function createMenu(data){
 		if(!data){return false;}
-		var result = [];
-		
-		//обрабатываем серверный ответ
-		for(var i=0; i<data['items'].length; i++){
-			var div = $('<div />', {'class':"b-dynamic-menu__cell", 'alt': data['items'][i]['title'], 'data-action':data['items'][i]['action']});
-			var span = $('<span />', {'class':"b-pic b-pic__amtel b-pic__amtel_"+data['items'][i]['action'].replace(/\_/g, '-')});
-			div.append(span);
-			result.push(div);
-		}
-		//куда будет загружен
-		var place = data['place']||'.b-dynamic-menu';
-		$(place).html(result);
-		//каким классом оформлен
-		if(data['class']){$(place).addClass(data['class']);};
-
-		
-		$('.b-dynamic-menu__cell').on('click', function(){
+		var result = $('<div />', {'class':"b-dynamic-menu"});	//контейнер меню
+		var itemAction = function(){							//обработчик нажатия на кнопку
 			//заглушка чтоб не сбивалась анимация
 			if($('.b-dynamic-menu__cell:animated')[0]){
 				return false;
@@ -51,9 +36,26 @@ $(function(){
 					
 					return false;
 			}
-			
-			
-		});
+		}
+		
+		//обрабатываем серверный ответ
+		for(var i=0; i<data['items'].length; i++){
+			var div = $('<div />', {'class':"b-dynamic-menu__cell", 'alt': data['items'][i]['title'], 'data-action':data['items'][i]['action']});
+			div.on('click', itemAction);
+			var span = $('<span />', {'class':"b-pic b-pic__amtel b-pic__amtel_"+data['items'][i]['action'].replace(/\_/g, '-')});
+			div.append(span);
+			result.append(div);
+		}
+		//каким классом оформлен
+		if(data['class']){result.addClass(data['class']);};
+		//куда будет загружен
+		if(data['place']){
+			$(data['place']).html(result);
+			return false;
+		}else{
+			return result;
+		}
+		
 	}//createMenu
 
 

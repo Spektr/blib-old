@@ -1,39 +1,33 @@
 (function(){
-    var constructors ={};
-	var iterations =[];
-    var setConstructor = function(key, func){
+    var constructors ={};								//массив конструкторов
+    var setConstructor = function(key, func){			//установка конструктора
         constructors[key]=func;
     }
-    var applyConstructor = function(key, data){
-        (key in constructors)?constructors[key](data):console.log(key+" is not defined");
-    }
-	var satIteration = function(request, answer){
-		var index = iterations.length;
-		iterations[index]=[];
-		iterations[index]['request'] = request;
-		iterations[index]['answer'] = answer;
-	}
-	var clearIteration = function(index){
-		iterations = iterations.slice(0, index);
-		
-		var data = iterations[index-1]['answer'];
-		if(!data['status']){return false;}
-		for(key in data['structure']){
-			applyConstructor(data['structure'][key]['type'], data['structure'][key]);
-		}
-		
-	}
-		
-	window.blib.build = function(dataObject, callback){
-		/*хрень для истории*/
-		if(dataObject['title']){
-			var historyName = dataObject['title'];
-			delete dataObject['title'];
+    var applyConstructor = function(key, data){			//применение конструктора
+        if(key in constructors){
+			return constructors[key](data);
 		}else{
-			var historyName = "X";
+			console.log(key+" is not defined");
 		}
-		/*хрень для истории*/
+    }
+	var applyBuild = function(data){					//построение дом дерева из ответа
+		if(!data || !data['status']){return false;}
+		var place = (data['place'])?$(data['place']):$('body');	//ставим место куда грузить ответ
+		var append = (jQuery)?'append':'appendChild';
+		var answer =[];
+		for(key in data['structure']){
+			answer.push(applyConstructor(data['structure'][key]['type'], data['structure'][key]));
+		}
+		var result = [];
+		for(i in answer){if(answer[i]){result[i]=answer[i];}};
+		if(result.length>0){place.html("")};
 		
+		for(i in result){place[append](result[i]);}
+	};
+
+	//строим при ответе сервера
+	window.blib.build = function(dataObject, callback){
+
 		if((typeof callback === "function") && (typeof dataObject === "string")){
 			setConstructor(dataObject, callback);
 			return true;
@@ -48,21 +42,20 @@
 			data:serializeData,
 			dataType: "json",
 			success: function(data){
-				if(!data['status']){return false;}
-				satIteration(dataObject, data);
-				applyConstructor("requestHistory", historyName); /*хрень для истории*/
-				for(key in data['structure']){
-					applyConstructor(data['structure'][key]['type'], data['structure'][key]);
-				}
+				/*хрень для истории*/
+				var historyData = {'request':dataObject, 'answer':data};
+				applyConstructor("dynamicHistory", historyData);
+				/*хрень для истории*/
+				applyBuild(data);
 			}
 		});
 	};
 	
-	window.blib.build.clearHistory = function(index){
-		clearIteration(index);
-	};
+	//строим по входящим данным
+	window.blib.build.handler = applyBuild;
 	
 })(); 
 
 //added dynamic blocks
+blib.include("b-/b-dynamic-history/b-dynamic-history");	
 blib.include("b-/b-dynamic-form/b-dynamic-form");
