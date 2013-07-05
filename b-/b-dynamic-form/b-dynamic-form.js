@@ -4,10 +4,16 @@ $(function(){
 	
 	/*определяем базовый конструктор полей формы*/			//0_0 сломать этот подход при первой же возможности
 	var defaultAttr = (function(){
-		var attrArray = {'class':true, 'name':true};
+		var attrArray = {'class':true, 'name':true, 'action':true};
 		return function(obj,attr){
 			for(i in attr){
-				if(i in attrArray){obj[i]=attr[i]};
+				if(i in attrArray){
+					if(i == "action"){
+						obj['data-action']=attr[i];
+					}else{
+						obj[i]=attr[i];
+					}
+				};
 			}
 			return obj;
 		}
@@ -22,10 +28,12 @@ $(function(){
 		result.type="text";
 		if('value' in obj){result.defaultValue=obj.value;}
 		
+		result.onfocus = function(){this['value'] ="";}
+		
 		if('label' in obj){
 			var label = document.createElement("label");
+			label.innerHTML=obj.label;
 			label.appendChild(result);
-			label.innerHTML+=obj.label;
 			result = label;
 		}
 		
@@ -36,13 +44,15 @@ $(function(){
 	funcs['password']=function(obj){
 		var result = document.createElement("input");
 		result = defaultAttr(result, obj);
-		result.type="password";
+		result.type="text";
 		if('value' in obj){result.defaultValue=obj.value;}
+		
+		result.onfocus = function(){this['value'] =""; this['type'] = "password";}
 		
 		if('label' in obj){
 			var label = document.createElement("label");
+			label.innerHTML=obj.label;
 			label.appendChild(result);
-			label.innerHTML+=obj.label;
 			result = label;
 		}
 		
@@ -58,8 +68,8 @@ $(function(){
 		
 		if('label' in obj){
 			var label = document.createElement("label");
+			label.innerHTML=obj.label;
 			label.appendChild(result);
-			label.innerHTML+=obj.label;
 			result = label;
 			if(('value' in obj) && obj['value']=="checked"){result.children[0].checked=true;}
 		}
@@ -77,8 +87,8 @@ $(function(){
 		
 		if('label' in obj){
 			var label = document.createElement("label");
+			label.innerHTML=obj.label;
 			label.appendChild(result);
-			label.innerHTML+=obj.label;
 			result = label;
 			if(('value' in obj) && obj['value']=="checked"){result.children[0].checked=true;}
 		}
@@ -87,7 +97,7 @@ $(function(){
 	}
 	
 	
-	//селект с опциями
+	//селект списком
 	funcs['list']=function(obj){
 		var result = document.createElement("select");
 		result.multiple='multiple';
@@ -101,13 +111,75 @@ $(function(){
 
 		if('label' in obj){
 			var label = document.createElement("label");
+			label.innerHTML=obj.label;
 			label.appendChild(result);
-			label.innerHTML+=obj.label;
 			result = label;
 		}
 		
 		return result;
 	};
+	
+	//селект одной строкой
+	funcs['combo']=function(obj){
+		var result = document.createElement("select");
+		result = defaultAttr(result, obj);
+
+		for(i in obj['options']){
+			var sellected = (obj['options'][i]['selected'] == "selected")?true:false;
+			var opt = new Option(obj['options'][i]['label'], obj['options'][i]['value'], sellected, false);
+			
+			var disabled = (obj['options'][i]['disabled'] == "disabled")?true:false;
+			opt.disabled = disabled;
+			result.options.add(opt);
+		}
+
+		if('label' in obj){
+			var label = document.createElement("label");
+			label.innerHTML=obj.label;
+			label.appendChild(result);
+			result = label;
+		}
+		
+		return result;
+	};
+	
+	//кнопка отправки
+	funcs['submit']=function(obj){
+		var result = document.createElement("input");
+		result = defaultAttr(result, obj);
+		result.type="submit";
+		if('value' in obj){result.defaultValue=obj.value;}
+		
+		if('label' in obj){
+			var label = document.createElement("label");
+			label.innerHTML=obj.label;
+			label.appendChild(result);
+			result = label;
+		}
+		
+		return result;
+	}
+	
+	//кнопка отправки
+	funcs['button']=function(obj){
+		var result = document.createElement("input");
+		result = defaultAttr(result, obj);
+		result.type="button";
+		if('value' in obj){result.defaultValue=obj.value;}
+		
+		result.onclick = function(){ blib.build({'a':this['data-action']});};
+		
+		if('label' in obj){
+			var label = document.createElement("label");
+			label.innerHTML=obj.label;
+			label.appendChild(result);
+			result = label;
+		}
+		
+		return result;
+	}
+	
+	
 	
 	//и обьявляем конструктор
 	var handle = function(obj){
@@ -119,6 +191,7 @@ $(function(){
 	
 	//функция создания формы из переданных данных
 	function createForm(data){
+		console.log(data);
 		if(!data){return false;}
 		var result = [];
 

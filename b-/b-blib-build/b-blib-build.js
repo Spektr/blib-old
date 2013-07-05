@@ -57,5 +57,5 @@
 })(); 
 
 //added dynamic blocks
-blib.include("b-/b-dynamic-history/b-dynamic-history");	
+blib.include("b-/b-dynamic-history/b-dynamic-history");
 blib.include("b-/b-dynamic-form/b-dynamic-form");

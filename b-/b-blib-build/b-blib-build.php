@@ -1,6 +1,63 @@
 <?php header('Content-type: application/json; charset: utf8');
 
 switch($_REQUEST['a']){
+
+	case "forget pass":
+		$answer = array(
+			"status"=>true,
+			"message"=>"Ок",
+			"structure"=>array(
+				array(
+					'type'=>"menu",
+					'class'=>"b-menu_amtel b-dynamic-menu_transparent_off",
+					'place'=>".b-main-page__panel",
+					'items'=>array(
+						array(
+							"title"=>"клиенты",
+							"description"=>"",
+							"action"=>"client"
+						),
+						array(
+							"title"=>"агенты",
+							"description"=>"",
+							"action"=>"agent"
+						),
+						array(
+							"title"=>"спутники",
+							"description"=>"",
+							"action"=>"satellist"
+						),
+						array(
+							"title"=>"станции",
+							"description"=>"",
+							"action"=>"station"
+						),
+						array(
+							"title"=>"1С",
+							"description"=>"",
+							"action"=>"one_s"
+						),
+						array(
+							"title"=>"статистика",
+							"description"=>"",
+							"action"=>"statistic"
+						),
+						array(
+							"title"=>"плат.карты",
+							"description"=>"",
+							"action"=>"cardgen"
+						),
+						array(
+							"title"=>"тарифы",
+							"description"=>"",
+							"action"=>"tarifs"
+						)
+					)//items
+				)//menu
+			)//structure
+		);
+	break;
+
 	case "menu":
 		$answer = array(
 			"status"=>true,
@@ -62,9 +119,38 @@ switch($_REQUEST['a']){
 			"message":"Ok",
 			"place":".b-main-page__panel",
 			"structure":[
+				{
+				  "type":"form",
+				  "class":"b-autorisation",
+				  "place":".b-main-page__auth",
+				  "name":"clients",
+				  "action":"?",
+				  "method":"POST",
+				  "content":[
+					{
+					  "type":"text",
+					  "name":"login",
+					  "value":"Введите логин"
+					},
+					{
+					  "type":"password",
+					  "name":"password",
+					  "value":"Введите пароль"
+					},
+					{
+					  "type":"submit",
+					  "value":"Войти"
+					},
+					{
+					  "type":"button",
+					  "value":"Напомнить пароль",
+					  "action":"forget pass"
+					}
+				  ]
+				},
 			  {
 			  "type":"form",
-			  "class":"b-dynamic-form_amtel",
+			  "class":"b-dynamic-form_amtel-auth",
 			  "name":"clients",
 			  "action":"?",
 			  "method":"POST",
@@ -72,200 +158,7 @@ switch($_REQUEST['a']){
 				{
 				  "type":"text",
 				  "name":"login",
-				  "value":"fsdf"
-				},
-				{
-				  "type":"password",
-				  "name":"password",
-				  "label":"Пароль",
-				  "value":"123"
-				},
-				{
-				  "type":"check",
-				  "name":"remember_me",
-				  "value":"checked"
-				},
-				{
-				  "type":"option",
-				  "name":"permissions",
-				  "label":"Как пользователь",
-				  "value":"checked"
-				},
-				{
-				  "type":"option",
-				  "name":"permissions",
-				  "label":"Как администратор",
-				  "value":""
-				},
-				{
-				  "type":"list",
-				  "name":"modules",
-				  "label":"Доступные модули",
-				  "options":[
-					{
-					  "label":"Клиенты",
-					  "value":"clients",
-					  "selected":"selected"
-					},
-					{
-					  "label":"Группы",
-					  "value":"groups",
-					  "selected":"selected"
-					},
-					{
-					  "label":"Тарифы",
-					  "value":"tariffs"
-					},
-					{
-					  "label":"Отчёты",
-					  "value":"reports",
-					  "disabled":"disabled"
-					},
-					{
-					  "label":"Настройки",
-					  "value":"settings",
-					  "selected":"selected"
-					}
-				  ]
-				},
-				{
-				  "type":"combo",
-				  "name":"server",
-				  "label":"Сервер для входа",
-				  "options":[
-					{
-					  "label":"Москва",
-					  "value":"192.168.1.1"
-					},
-					{
-					  "label":"Барнаул",
-					  "value":"192.168.1.2"
-					},
-					{
-					  "label":"Петропавловск-Камчатский",
-					  "value":"192.168.1.3",
-					  "disabled":"disabled"
-					},
-					{
-					  "label":"Тест",
-					  "value":"192.168.1.4",
-					  "selected":"selected"
-					}
-				  ]
-				},
-				{
-				  "type":"submit",
-				  "value":"Войти"
-				}
-			  ]
-			}
-			,{
-			  "type":"form",
-			  "class":"b-dynamic-form_amtel",
-			  "name":"clients",
-			  "action":"?",
-			  "method":"POST",
-			  "content":[
-				{
-				  "type":"text",
-				  "name":"login",
-				  "value":"fsdf"
-				},
-				{
-				  "type":"password",
-				  "name":"password",
-				  "label":"Пароль",
-				  "value":"123"
-				},
-				{
-				  "type":"check",
-				  "name":"remember_me",
-				  "value":"checked"
-				},
-				{
-				  "type":"option",
-				  "name":"permissions",
-				  "label":"Как пользователь",
-				  "value":"checked"
-				},
-				{
-				  "type":"option",
-				  "name":"permissions",
-				  "label":"Как администратор",
-				  "value":""
-				},
-				{
-				  "type":"list",
-				  "name":"modules",
-				  "label":"Доступные модули",
-				  "options":[
-					{
-					  "label":"Клиенты",
-					  "value":"clients",
-					  "selected":"selected"
-					},
-					{
-					  "label":"Группы",
-					  "value":"groups",
-					  "selected":"selected"
-					},
-					{
-					  "label":"Тарифы",
-					  "value":"tariffs"
-					},
-					{
-					  "label":"Отчёты",
-					  "value":"reports",
-					  "disabled":"disabled"
-					},
-					{
-					  "label":"Настройки",
-					  "value":"settings",
-					  "selected":"selected"
-					}
-				  ]
-				},
-				{
-				  "type":"combo",
-				  "name":"server",
-				  "label":"Сервер для входа",
-				  "options":[
-					{
-					  "label":"Москва",
-					  "value":"192.168.1.1"
-					},
-					{
-					  "label":"Барнаул",
-					  "value":"192.168.1.2"
-					},
-					{
-					  "label":"Петропавловск-Камчатский",
-					  "value":"192.168.1.3",
-					  "disabled":"disabled"
-					},
-					{
-					  "label":"Тест",
-					  "value":"192.168.1.4",
-					  "selected":"selected"
-					}
-				  ]
-				},
-				{
-				  "type":"submit",
-				  "value":"Войти"
-				}
-			  ]
-			},
-			{
-			  "type":"form",
-			  "class":"b-dynamic-form_amtel",
-			  "name":"clients",
-			  "action":"?",
-			  "method":"POST",
-			  "content":[
-				{
-				  "type":"text",
-				  "name":"login",
+				  "label":"Логин",
 				  "value":"fsdf"
 				},
 				{
