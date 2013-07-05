@@ -17,8 +17,8 @@ $(function(){
 	
 	//собственно сам обработчик
 	function dynamicHistory(historyData){
+		if(historyData['request']['title']){var message = historyData['request']['title']}else{return false;}
 		satIteration(historyData['request'],historyData['answer']);
-		var message = (historyData['request']['title'])?historyData['request']['title']:"X";
 		var statusLink = $('<a />', {'href':"#",'class':"b-dynamic-history__link", 'text':message});
 		
 		statusLink.on('click', function(){
