@@ -10,7 +10,7 @@ switch($_REQUEST['a']){
 				array(
 					'type'=>"menu",
 					'class'=>"b-menu_amtel b-dynamic-menu_transparent_off",
-					'place'=>".b-main-page__panel",
+					'container'=>".b-main-page__panel",
 					'items'=>array(
 						array(
 							"title"=>"клиенты",
@@ -66,7 +66,7 @@ switch($_REQUEST['a']){
 				array(
 					'type'=>"menu",
 					'class'=>"b-menu_amtel b-dynamic-menu_transparent_off",
-					'place'=>".b-popup-menu__content",
+					'container'=>".b-popup-menu__content",
 					'items'=>array(
 						array(
 							"title"=>"клиенты",
@@ -117,12 +117,12 @@ switch($_REQUEST['a']){
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"place":".b-main-page__panel",
+			"container":".b-main-page__panel",
 			"structure":[
 				{
 				  "type":"form",
 				  "class":"b-autorisation",
-				  "place":".b-main-page__auth",
+				  "container":".b-main-page__auth",
 				  "name":"clients",
 				  "action":"?",
 				  "method":"POST",
@@ -259,7 +259,7 @@ switch($_REQUEST['a']){
 				array(
 					'type'=>"menu",
 					'class'=>"b-menu_amtel",
-					'place'=>".b-dynamic-menu",
+					'container'=>".b-dynamic-menu",
 					'items'=>array(
 						array(
 							"title"=>"клиенты",

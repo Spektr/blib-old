@@ -12,7 +12,7 @@
     }
 	var applyBuild = function(data){					//построение дом дерева из ответа
 		if(!data || !data['status']){return false;}
-		var place = (data['place'])?$(data['place']):$('body');	//ставим место куда грузить ответ
+		var place = (data['container'])?$(data['container']):$('body');	//ставим место куда грузить ответ
 		var append = (jQuery)?'append':'appendChild';
 		var answer =[];
 		for(key in data['structure']){

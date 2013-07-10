@@ -207,8 +207,8 @@ $(function(){
 		//каким классом оформлен
 		if(data['class']){form.addClass(data['class']);};
 		//куда будет загружен
-		if(data['place']){
-			$(data['place']).html(form);
+		if(data['container']){
+			$(data['container']).html(form);
 			return false;
 		}else{
 			return form;
