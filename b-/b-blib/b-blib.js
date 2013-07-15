@@ -60,11 +60,11 @@ window.blib =(function(){
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				xhr.send(dataObject['data']);
 			}else{
-				xhr.open("GET", dataObject['url'], true);
+				var rData = (dataObject['data'])?"?"+dataObject['data']:"";
+				xhr.open("GET", dataObject['url']+rData, true);
 				xhr.setRequestHeader("Content-Type", "text/html");
-				xhr.send(dataObject['data']);
+				xhr.send(null);
 			}
-	
 		} else {
 			alert("Браузер не поддерживает AJAX");
 		}
@@ -257,6 +257,8 @@ window.blib =(function(){
 	for(key in arr){
 		cssFunction(key, arr[key]['list']||[]);
 	}
+	
+	if(storageFlag){window.localStorage.clear();} //0_0 for clear old change b-blib
 /** prehandling */
 	
 	/** public object */
