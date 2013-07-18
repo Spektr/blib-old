@@ -1,7 +1,6 @@
 window.blib =(function(){
 	var self        = this;
 	var storageFlag = ('localStorage' in window && window['localStorage'] !== null)?true:false;
-	var forceLoad   = "";																						/** postfix for force send request to server */
 	var version     = (storageFlag && localStorage.getItem('version'))?localStorage.getItem('version'):1;		/** (0_0 NaN .. 1)curent version, get from server (is seconds to last modified .ini file) */
 	var head        = document.getElementsByTagName('head')[0];
 	var js          = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{};
@@ -109,8 +108,7 @@ window.blib =(function(){
 					if(innerFiles[i]==cssFile){return cssFunction(key, innerFiles);}
 				}
 			}
-			
-			forceLoad="?new="+version;
+
 			delete css[cssFile];
 			var addededStyle = document.getElementById(cssFile);
 			if(addededStyle){						
@@ -122,7 +120,7 @@ window.blib =(function(){
 		var link  = document.createElement('link');
 		link.rel  = 'stylesheet';
 		link.type = 'text/css';
-		link.href = cssFile+forceLoad;
+		link.href = cssFile+"?new="+version;
 		link.media = 'all';
 		link.id = cssFile;
 		if(head.appendChild(link)){
@@ -149,7 +147,6 @@ window.blib =(function(){
 		jsFile = jsFile.toString();
 
 		if(jsFile in js){
-			forceLoad=(js[jsFile]['version']==version)?"":"?new="+version;
 			delete js[jsFile];
 			var addededScript = document.getElementById(jsFile);
 			if(addededScript){						
@@ -166,7 +163,7 @@ window.blib =(function(){
 
 		var script  = document.createElement('script');
 		script.id = jsFile;
-		script.src = jsFile+forceLoad;
+		script.src = jsFile+"?new="+version;
 		script.type="text/javascript";
 		if(head.appendChild(script)){
 			js[jsFile]={};
@@ -193,7 +190,7 @@ window.blib =(function(){
 		if(target){
 			var target = $(target);
 			$.ajax({
-				url:file+'.html',
+				url:file+'.html?new='+version,
 				dataType: "html",
 				success: function(data){
 					for(key in target){
