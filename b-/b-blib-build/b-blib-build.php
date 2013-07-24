@@ -62,7 +62,7 @@ switch($_REQUEST['a']){
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"conteiner":".b-dynamic-menu__content",
+			"conteiner":".b-main-page__panel",
 			"structure":[
 				{
 				  "type":"form",
@@ -233,6 +233,53 @@ switch($_REQUEST['a']){
 					}
 				]}
 			]
+		}';		
+	break;
+	
+	case "satellist":
+		echo '{
+			"status":true,
+			"message":"Ok",
+			"conteiner":".b-dynamic-menu__content",
+			"structure":[{
+				"type":"table",
+				"class":"b-dynamic-table_default",
+				"name":"clients",
+				"content":[{
+					"id":"ID",
+					"login":"Логин",
+					"password":"Пароль"
+					},{
+					"id":"Значение 11",
+					"login":"Значение 12",
+					"password":"Значение 13"
+					},{
+					"id":"Значение 21",
+					"login":"Значение 22",
+					"password":"Значение 23"
+				}],
+				"customization":{
+					"id":"40",
+					"password":500
+				},
+				"actions":[{
+					"name":"add",
+					"description":"Редактировать пользователя",
+					"attributes":[
+						"id"
+					]},{
+					"name":"edit",
+					"description":"На клиентов",
+					"attributes":[
+						"id"
+					]},{
+					"name":"del",
+					"description":"На агентов",
+					"attributes":[
+						"id"
+					]}
+				]
+			}]
 		}';		
 	break;
 

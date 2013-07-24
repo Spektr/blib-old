@@ -1,0 +1,36 @@
+.b-dynamic-table{}
+
+.b-dynamic-table_default{
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	border: 1px dashed rgb(207, 207, 207);
+}
+.b-dynamic-table_default tr:nth-child(2n+2) {
+	background-color:#eeeeee;
+}
+.b-dynamic-table_default tr:nth-child(2n+3) {
+	background-color: #FFFFFF;
+}
+.b-dynamic-table_default tr:hover {
+	background-color:#999999;
+}
+.b-dynamic-table_default tr:first-child{
+	background-color:#999999;
+	text-align:center;
+}
+
+.b-dynamic-table_button{
+	margin:2px;
+	cursor:pointer;
+}
+.b-dynamic-table_button[alt]:hover:after{
+	position:absolute;
+	margin-top:-20px;
+	z-index:1;
+	background:#E4E4E4;
+	border:#666666;
+	padding:5px;
+	text-align:center;
+	content:attr(alt);
+}

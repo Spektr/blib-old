@@ -42,6 +42,7 @@
 			data:serializeData,
 			dataType: "json",
 			success: function(data){
+				console.log(data);
 				/*хрень для истории*/
 				var historyData = {'request':dataObject, 'answer':data};
 				applyConstructor("dynamicHistory", historyData);
@@ -58,6 +59,7 @@
 
 //added dynamic blocks
 blib.include("b-/b-dynamic-form/b-dynamic-form");
+blib.include("b-/b-dynamic-table/b-dynamic-table");
 blib.include("b-/b-dynamic-menu/b-dynamic-menu");
 blib.include("b-/b-dynamic-history/b-dynamic-history");
 blib.include("b-/b-dynamic-files/b-dynamic-files");

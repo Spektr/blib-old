@@ -205,7 +205,6 @@ $(function(){
 	
 	//функция создания формы из переданных данных
 	function createForm(data){
-		console.log(data);
 		if(!data){return false;}
 		var result = [];
 
