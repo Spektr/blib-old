@@ -12,7 +12,7 @@
     }
 	var applyBuild = function(data){					//построение дом дерева из ответа
 		if(!data || !data['status']){return false;}
-		var place = (data['container'])?$(data['container']):$('body');	//ставим место куда грузить ответ
+		var conteiner = (data['conteiner'])?$(data['conteiner']):$('body');	//ставим место куда грузить ответ
 		var append = (jQuery)?'append':'appendChild';
 		var answer =[];
 		for(key in data['structure']){
@@ -20,9 +20,9 @@
 		}
 		var result = [];
 		for(i in answer){if(answer[i]){result[i]=answer[i];}};
-		if(result.length>0){place.html("")};
+		if(result.length>0){conteiner.html("")};
 		
-		for(i in result){place[append](result[i]);}
+		for(i in result){conteiner[append](result[i]);}
 	};
 
 	//строим при ответе сервера
@@ -57,5 +57,7 @@
 })(); 
 
 //added dynamic blocks
-blib.include("b-/b-dynamic-history/b-dynamic-history");
 blib.include("b-/b-dynamic-form/b-dynamic-form");
+blib.include("b-/b-dynamic-menu/b-dynamic-menu");
+blib.include("b-/b-dynamic-history/b-dynamic-history");
+blib.include("b-/b-dynamic-files/b-dynamic-files");

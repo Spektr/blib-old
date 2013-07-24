@@ -1,1 +1,27 @@
 .b-dynamic-form{}
+.b-dynamic-form_default{
+	padding:2px;
+	background:#F3F3F3;
+	border:1px solid #CCCCCC;
+	width:20%;
+}
+.b-dynamic-form_default label,
+.b-dynamic-form_default input[type=text],
+.b-dynamic-form_default textarea,
+.b-dynamic-form_default input[type=password],
+.b-dynamic-form_default select,
+.b-dynamic-form_default input[type=submit],
+.b-dynamic-form_default input[type=button]{
+	box-sizing: border-box;
+	display: inline-block;
+	width: 100%;
+	margin: 2px 0;
+}
+.b-dynamic-form_default input[type=radio],
+.b-dynamic-form_default input[type=checkbox]{
+	float: right;
+	margin-right: 1%;
+}
+.b-dynamic-form_default textarea{
+		resize: vertical;
+}

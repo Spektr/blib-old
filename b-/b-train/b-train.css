@@ -1,4 +1,6 @@
-.b-train{}
+.b-train{
+	text-align: center;
+}
 
 /*подложка*/
 .b-train__list{

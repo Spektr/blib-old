@@ -104,8 +104,9 @@ $(function(){
 		result = defaultAttr(result, obj);
 
 		for(i in obj['options']){
-			var sellected = (obj['options'][i]['selected'] == "selected")?true:false;
-			var opt = new Option(obj['options'][i]['label'], obj['options'][i]['value'], sellected, false);
+			var opt = new Option(obj['options'][i]['label'], obj['options'][i]['value'], false, false);
+			opt.defaultSelected = (obj['options'][i]['selected'] == "selected")?"selected":false;
+			opt.disabled = (obj['options'][i]['disabled'] == "disabled")?true:false;
 			result.options.add(opt);
 		}
 
@@ -125,11 +126,10 @@ $(function(){
 		result = defaultAttr(result, obj);
 
 		for(i in obj['options']){
-			var sellected = (obj['options'][i]['selected'] == "selected")?true:false;
-			var opt = new Option(obj['options'][i]['label'], obj['options'][i]['value'], sellected, false);
+			var opt = new Option(obj['options'][i]['label'], obj['options'][i]['value'], false, false);
+			opt.defaultSelected = (obj['options'][i]['selected'] == "selected")?"selected":false;
+			opt.disabled = (obj['options'][i]['disabled'] == "disabled")?true:false;
 			
-			var disabled = (obj['options'][i]['disabled'] == "disabled")?true:false;
-			opt.disabled = disabled;
 			result.options.add(opt);
 		}
 
@@ -179,7 +179,21 @@ $(function(){
 		return result;
 	}
 	
-	
+	//комментарий
+	funcs['memo']=function(obj){
+		var result = document.createElement("textarea");
+		result = defaultAttr(result, obj);
+		if('value' in obj){result.value=obj.value;}
+		
+		if('label' in obj){
+			var label = document.createElement("label");
+			label.innerHTML=obj.label;
+			label.appendChild(result);
+			result = label;
+		}
+		
+		return result;
+	}
 	
 	//и обьявляем конструктор
 	var handle = function(obj){
@@ -207,8 +221,8 @@ $(function(){
 		//каким классом оформлен
 		if(data['class']){form.addClass(data['class']);};
 		//куда будет загружен
-		if(data['container']){
-			$(data['container']).html(form);
+		if(data['conteiner']){
+			$(data['conteiner']).html(form);
 			return false;
 		}else{
 			return form;

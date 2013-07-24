@@ -49,8 +49,8 @@ $(function(){
 		//каким классом оформлен
 		if(data['class']){result.addClass(data['class']);};
 		//куда будет загружен
-		if(data['container']){
-			$(data['container']).html(result);
+		if(data['conteiner']){
+			$(data['conteiner']).html(result);
 			return false;
 		}else{
 			return result;
