@@ -20,11 +20,11 @@
 	text-align:center;
 }
 
-.b-dynamic-table_button{
+.b-dynamic-table__button{
 	margin:2px;
 	cursor:pointer;
 }
-.b-dynamic-table_button[alt]:hover:after{
+.b-dynamic-table__button[alt]:hover:after{
 	position:absolute;
 	margin-top:-20px;
 	z-index:1;

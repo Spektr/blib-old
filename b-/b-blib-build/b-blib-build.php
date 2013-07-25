@@ -10,7 +10,7 @@ switch($_REQUEST['a']){
 				array(
 					'type'=>"menu",
 					'class'=>"b-menu_amtel b-dynamic-menu_transparent_off",
-					'conteiner'=>".b-popup-menu__content",
+					'container'=>".b-popup-menu__content",
 					'items'=>array(
 						array(
 							"title"=>"клиенты",
@@ -62,12 +62,11 @@ switch($_REQUEST['a']){
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"conteiner":".b-main-page__panel",
 			"structure":[
 				{
 				  "type":"form",
 				  "class":"b-autorisation",
-				  "conteiner":".b-main-page__auth",
+				  "container":".b-main-page__auth",
 				  "name":"clients",
 				  "action":"?",
 				  "method":"POST",
@@ -102,12 +101,12 @@ switch($_REQUEST['a']){
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"conteiner":".b-dynamic-menu__content",
+			"container":".b-main-page__panel",
 			"structure":[
 				{
 				"type":"form",
 				"class":"b-dynamic-form_default",
-				"container":"form",
+				"container":"",
 				"name":"clients",
 				"action":"?",
 				"method":"POST",
@@ -117,6 +116,16 @@ switch($_REQUEST['a']){
 						"name":"login",
 						"label":"Логин",
 						"value":"Вася"
+					},
+					{
+						"type":"autotext",
+						"name":"login2",
+						"label":"Логингин",
+						"value":"Васяся",
+						"delay":500,
+						"numVariants":5,
+						"actions":"get_autotext"
+						
 					},
 					{
 						"type":"password",
@@ -214,12 +223,20 @@ switch($_REQUEST['a']){
 		}';
 	break;
 	
+	case "get_autotext":
+		echo '{
+			"status":true,
+			"message":"Ok",
+			"container":"",
+			"content":["Вася", "Фигася", "Тупася"]
+		}';
+	break;
 	
 	case "agent":
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"conteiner":".b-dynamic-menu__content",
+			"container":".b-main-page__panel",
 			"structure":[{
 				"type":"fileList",
 				"files":[{
@@ -240,7 +257,7 @@ switch($_REQUEST['a']){
 		echo '{
 			"status":true,
 			"message":"Ok",
-			"conteiner":".b-dynamic-menu__content",
+			"container":".b-main-page__panel",
 			"structure":[{
 				"type":"table",
 				"class":"b-dynamic-table_default",
@@ -263,17 +280,17 @@ switch($_REQUEST['a']){
 					"password":500
 				},
 				"actions":[{
-					"name":"add",
+					"name":"client",
 					"description":"Редактировать пользователя",
 					"attributes":[
 						"id"
 					]},{
-					"name":"edit",
+					"name":"agent",
 					"description":"На клиентов",
 					"attributes":[
 						"id"
 					]},{
-					"name":"del",
+					"name":"del_user",
 					"description":"На агентов",
 					"attributes":[
 						"id"

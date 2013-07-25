@@ -28,7 +28,8 @@ $(function(){
 		result.type="text";
 		if('value' in obj){result.defaultValue=obj.value;}
 		
-		result.onfocus = function(){this['value'] ="";}
+		var onse = false;
+		result.onfocus = function(){if(!onse){this['value'] =""; onse=true;}}
 		
 		if('label' in obj){
 			var label = document.createElement("label");
@@ -38,6 +39,64 @@ $(function(){
 		}
 		
 		return result;
+	}
+	
+	//автозаполняемое текстовое поле
+	funcs['autotext']=function(obj){
+		var result = document.createElement("input"),
+			popup = document.createElement("div"),
+			onse = false,
+			keyupTimer;
+		popup.className = "b-dynamic-form__popup";
+
+
+			
+		result = defaultAttr(result, obj);
+		result.type="text";
+		if('value' in obj){result.defaultValue=obj.value;}
+
+		result.onfocus = function(){if(!onse){this['value'] =""; onse=true;}}
+		result.onblur = function(){window.setTimeout(closePopup,500);}
+		result.onkeyup = function(){
+			var self = this;
+			window.clearTimeout(keyupTimer);
+			keyupTimer = window.setTimeout(function(){
+				$.ajax({
+					url:"b-/b-blib-build/b-blib-build.php",
+					data:{'a':obj['actions'], 'needle':self.value},
+					dataType: "json",
+					success: function(data){
+						console.log(data);
+						popup.innerHTML = "";
+						for(key in data['content']){
+							var popupItem = document.createElement("div");
+							popupItem.className = "b-dynamic-form__popup-item";
+							popupItem.innerText = data['content'][key];
+							popupItem.onclick = function(){
+								result.value=this.innerText;
+								console.log(result);
+								closePopup();
+							}
+							popup.appendChild(popupItem);
+						}
+						console.log(popup.style);
+						console.log(result.style);
+					}
+				});				
+			}, obj['delay']);
+		}
+		
+	
+		var label = document.createElement("label");
+		label.innerHTML=(obj.label)?obj.label+"<br />":"";
+		label.appendChild(result);
+		label.appendChild(popup);
+		label.style.position="relative";
+		return label;
+		
+		function closePopup(){
+			popup.innerHTML="";
+		}
 	}
 	
 	//пароль
@@ -220,8 +279,8 @@ $(function(){
 		//каким классом оформлен
 		if(data['class']){form.addClass(data['class']);};
 		//куда будет загружен
-		if(data['conteiner']){
-			$(data['conteiner']).html(form);
+		if(data['container']){
+			$(data['container']).html(form);
 			return false;
 		}else{
 			return form;

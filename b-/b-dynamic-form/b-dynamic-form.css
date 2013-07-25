@@ -25,3 +25,26 @@
 .b-dynamic-form_default textarea{
 		resize: vertical;
 }
+
+/** для попапа автозаполнения */
+.b-dynamic-form__popup{
+	position: absolute;
+	z-index:1;
+	margin-top:-3px;
+	left:0;
+	right:0;
+	background: white;
+	border: 1px solid rgb(223, 223, 223);
+	border-top: none;
+	padding: 0;
+}
+.b-dynamic-form__popup-item{
+	width:100%;
+	cursor:pointer;
+	padding:0;
+	text-indent: 5px;
+}
+.b-dynamic-form__popup-item:hover{
+	background:#F3F3F3;
+}
+/** для попапа автозаполнения */

@@ -28,8 +28,8 @@ $(document).ready(function(){
 		//каким классом оформлен
 		if(data['class']){result.addClass(data['class']);};
 		//куда будет загружен
-		if(data['conteiner']){
-			$(data['conteiner']).html(result);
+		if(data['container']){
+			$(data['container']).html(result);
 			return false;
 		}else{
 			return result;
@@ -46,7 +46,7 @@ $(document).ready(function(){
 				}
 				attributes['a']=actions[key]['name'];				//что за функцию вызывать на сервере
 				attributes['title']=actions[key]['description'];	//для истории
-				buttonClass ="b-pic b-pic__amtel b-pic__amtel_"+attributes['a']+" b-dynamic-table_button";
+				buttonClass ="b-pic b-pic__amtel b-pic__amtel_"+attributes['a']+" b-dynamic-table__button";
 				button = $('<a />', {
 					'class':buttonClass,
 					'alt':actions[key]['description'],

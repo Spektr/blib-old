@@ -12,7 +12,7 @@
     }
 	var applyBuild = function(data){					//построение дом дерева из ответа
 		if(!data || !data['status']){return false;}
-		var conteiner = (data['conteiner'])?$(data['conteiner']):$('body');	//ставим место куда грузить ответ
+		var container = (data['container'])?$(data['container']):$('body');	//ставим место куда грузить ответ
 		var append = (jQuery)?'append':'appendChild';
 		var answer =[];
 		for(key in data['structure']){
@@ -20,9 +20,9 @@
 		}
 		var result = [];
 		for(i in answer){if(answer[i]){result[i]=answer[i];}};
-		if(result.length>0){conteiner.html("")};
+		if(result.length>0){container.html("")};
 		
-		for(i in result){conteiner[append](result[i]);}
+		for(i in result){container[append](result[i]);}
 	};
 
 	//строим при ответе сервера
