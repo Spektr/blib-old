@@ -6,6 +6,7 @@ switch($_REQUEST['a']){
 		$answer = array(
 			"status"=>true,
 			"message"=>"Ок",
+			'container'=>".b-popup-menu__content",
 			"structure"=>array(
 				array(
 					'type'=>"menu",

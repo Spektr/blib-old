@@ -1,7 +1,6 @@
 $(function(){
 	
 	blib.build("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
-    blib.build({'a':"menu"});	//ну и посылаем этот запрос
 		
 	//функция создания меню из переданных данных
 	function createMenu(data){

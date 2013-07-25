@@ -20,9 +20,12 @@
 		}
 		var result = [];
 		for(i in answer){if(answer[i]){result[i]=answer[i];}};
-		if(result.length>0){container.html("")};
+		if(container && result.length>0){
+			container.html("")
+			for(i in result){container[append](result[i]);}
+		};
 		
-		for(i in result){container[append](result[i]);}
+		
 	};
 
 	//строим при ответе сервера
