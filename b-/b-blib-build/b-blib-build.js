@@ -1,15 +1,15 @@
 (function(){
-    var constructors ={};								//массив конструкторов
-    var setConstructor = function(key, func){			//установка конструктора
-        constructors[key]=func;
-    }
-    var applyConstructor = function(key, data){			//применение конструктора
-        if(key in constructors){
+	var constructors ={};								//массив конструкторов
+	var setConstructor = function(key, func){			//установка конструктора
+		constructors[key]=func;
+	}
+	var applyConstructor = function(key, data){			//применение конструктора
+		if(key in constructors){
 			return constructors[key](data);
 		}else{
 			console.log(key+" is not defined");
 		}
-    }
+	}
 	var applyBuild = function(data){					//построение дом дерева из ответа
 		if(!data || !data['status']){return false;}
 		var container = (data['container'])?$(data['container']):$('body');	//ставим место куда грузить ответ
@@ -20,12 +20,8 @@
 		}
 		var result = [];
 		for(i in answer){if(answer[i]){result[i]=answer[i];}};
-		if(container && result.length>0){
-			container.html("")
-			for(i in result){container[append](result[i]);}
-		};
-		
-		
+		if(result.length>0){container.html("")};
+		for(i in result){container[append](result[i]);}
 	};
 
 	//строим при ответе сервера
@@ -43,6 +39,7 @@
 		$.ajax({
 			url:"b-/b-blib-build/b-blib-build.php",
 			data:serializeData,
+			type: "POST",
 			dataType: "json",
 			success: function(data){
 				console.log(data);
