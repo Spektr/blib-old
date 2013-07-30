@@ -224,6 +224,132 @@ switch($_REQUEST['a']){
 		}';
 	break;
 	
+	case "station":
+		echo '{
+			"status":true,
+			"message":"Ok",
+			"container":".b-main-page__panel",
+			"structure":[
+				{
+				"type":"form",
+				"class":"b-dynamic-form_default",
+				"container":"",
+				"name":"clients",
+				"action":"?",
+				"method":"POST",
+				"content":[
+					{
+						"type":"text",
+						"name":"login",
+						"label":"Логин",
+						"value":"Вася"
+					},
+					{
+						"type":"autotext",
+						"name":"login2",
+						"label":"Логингин",
+						"value":"Васяся",
+						"delay":500,
+						"numVariants":5,
+						"actions":"get_autotext"
+						
+					},
+					{
+						"type":"password",
+						"name":"password",
+						"label":"Пароль",
+						"value":"123"
+					},
+					{
+						"type":"check",
+						"name":"remember_me",
+						"label":"Запомнить меня",
+						"value":"checked"
+					},
+					{
+						"type":"option",
+						"name":"permissions",
+						"label":"Как пользователь",
+						"value":"checked"
+					},
+					{
+						"type":"option",
+						"name":"permissions",
+						"label":"Как администратор",
+						"value":""
+					},
+					{
+						"type":"list",
+						"name":"modules",
+						"label":"Доступные модули",
+						"options":[
+							{
+								"label":"Клиенты",
+								"value":"clients",
+								"selected":"selected"
+							},
+							{
+								"label":"Группы",
+								"value":"groups",
+								"selected":"selected"
+							},
+							{
+								"label":"Тарифы",
+								"value":"tariffs"
+							},
+							{
+								"label":"Отчёты",
+								"value":"reports",
+								"disabled":"disabled"
+							},
+							{
+								"label":"Настройки",
+								"value":"settings",
+								"selected":"selected"
+							}
+						]
+					},
+					{
+						"type":"combo",
+						"name":"server",
+						"label":"Сервер для входа",
+						"options":[
+							{
+								"label":"Москва",
+								"value":"192.168.1.1"
+							},
+							{
+								"label":"Барнаул",
+								"value":"192.168.1.2"
+							},
+							{
+								"label":"Петропавловск-Камчатский",
+								"value":"192.168.1.3",
+								"disabled":"disabled"
+							},
+							{
+								"label":"Тест",
+								"value":"192.168.1.4",
+								"selected":"selected"
+							}
+						]
+					},
+					{
+						"type":"memo",
+						"name":"comment",
+						"label":"Ваш комментарий",
+						"value":"Многострочный текст,\n отображаемый в поле для ввода\n"
+					},
+					{
+						"type":"submit",
+						"value":"Войти"
+					}
+				]
+				}
+			]
+		}';
+	break;
+	
 	case "get_autotext":
 		echo '{
 			"status":true,
