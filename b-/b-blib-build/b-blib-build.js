@@ -10,21 +10,50 @@
 				console.log(key+" is not defined");
 			}
 		},
-		applyBuild = function(data){					//построение дом дерева из ответа
-			if(!data){return false;}
-			var container = (data['container'])?blib(data['container']):blib('body');
-			var answer =[];
-			for(key in data['structure']){
-				answer.push(applyConstructor(data['structure'][key]['type'], data['structure'][key]));
+		curentBlock = "",
+		applyBuild = function(data){
+			if(!data){return false;}	//выходим если данных нет
+			if(data['block'] in constructors){return applyConstructor(data['block'], data);}	//если найден альтернативный застройщик юзаем его
+			var curentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (curentBlock+"__"+data['elem']);}else{return false;}})(),
+				answer = [],
+				result = document.createElement(data['tag']||"div");
+			if(data['block']){curentBlock=data['block'];}	//забиваем текущий блок
+			if(curentClass){result.className = curentClass};	//оформляем классом
+			
+			//устанавливаем модификаторы
+			if(curentClass && data['mods']){
+				for(key in mods){
+					result.className +=" "+curentClass+"_"+key+((data['mods'][key])?"_"+data['mods'][key]:"");
+				}
 			}
-			var result = [];
-			console.log(answer);
-			for(i in answer){if(answer[i]){result[i]=answer[i];}};
-			if(result.length>0){
-				container.html("");
-				
-			};
-			for(i in result){container.append(result[i][0]);}
+			
+			//задаем атрибуты
+			if(data['attrs']){
+				for(key in data['attrs']){
+					result[key] = (typeof(data['attrs'][key])=="string")?data['attrs'][key]:(JSON.strnigify(data['attrs'][key]));
+				}
+			}
+			
+			//проверяем есть ли вложенность и рекурсивно обрабатываем если есть
+			switch(typeof(data['content'])){
+				case "object":
+					for(key in data['content']){answer.push(applyBuild(data['content'][key]));}
+				break;
+				default:
+					answer.push(data['content']);
+				break;
+			}
+			
+			//заполняем текущий элемент вложенными в него
+			for(i in answer){if(answer[i]["innerHTML"]){result.appendChild(answer[i]);}else{ result.innerHTML+=answer[i];}};
+			
+			
+			//если есть контейнер то добавляем в него
+			if(data['container']){
+				blib(data['container']).html("").append(result);
+			}else{
+				return result;
+			}
 			
 		};
 
@@ -45,6 +74,7 @@
 			data:serializeData,
 			dataType: "json",
 			success: function(data){
+				console.log(data);
 				/*хрень для истории*/
 				var historyData = {'request':dataObject, 'answer':data};
 				applyConstructor("dynamicHistory", historyData);
@@ -65,3 +95,4 @@ blib.include("b-/b-dynamic-table/b-dynamic-table");
 blib.include("b-/b-dynamic-menu/b-dynamic-menu");
 blib.include("b-/b-dynamic-history/b-dynamic-history");
 blib.include("b-/b-dynamic-files/b-dynamic-files");
+blib.include("b-/b-dynamic-skeleton/b-dynamic-skeleton");

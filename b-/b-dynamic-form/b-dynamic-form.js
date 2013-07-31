@@ -66,6 +66,7 @@ $(function(){
 					data:{'a':obj['actions'], 'needle':self.value},
 					dataType: "json",
 					success: function(data){
+						console.log(data);
 						popup.innerHTML = "";
 						for(key in data['content']){
 							var popupItem = document.createElement("div");
@@ -78,6 +79,8 @@ $(function(){
 							}
 							popup.appendChild(popupItem);
 						}
+						console.log(popup.style);
+						console.log(result.style);
 					}
 				});				
 			}, obj['delay']);
@@ -280,7 +283,7 @@ $(function(){
 			$(data['container']).html(form);
 			return false;
 		}else{
-			return form;
+			return form[0];
 		}
 	}//createForm
 	

@@ -21,8 +21,9 @@ window.blib =(function(){
 			
 				if(point=="."){
 					for(var j=0;j<elsLen;j++){
-						if(els[j].className == pattern){
-							elements.push(els[j]);
+						var temp = els[j].className.split(' ');
+						for(var tmpLen=temp.length, k=0; k<tmpLen; k++){
+							if(temp[k] == pattern){elements.push(els[j]);	break;}
 						}
 					}
 				}else if(point=="#"){
@@ -45,11 +46,13 @@ window.blib =(function(){
 				for(var len = this.length, i=0; i<len; i++){
 					this[i].innerHTML = obj;
 				}
+				return this;
 			};			
 			result.append = function(obj){
 				for(var len = this.length, i=0; i<len; i++){
 					this[i].appendChild(obj);
 				}
+				return this;
 			};
 			return result;
 		
