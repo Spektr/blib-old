@@ -60,6 +60,11 @@
 							result[key] = eval('('+data['attrs'][key]+')');
 						}
 					}else{
+						if(key=="style"){
+							for(atr in data['attrs'][key]){
+								result['style'][atr]=data['attrs']['style'][atr];
+							}
+						}
 						result[key] = JSON.stringify(data['attrs'][key]);
 					}
 				}
@@ -123,3 +128,9 @@
 	window.blib.build.handler = applyBuild;
 	
 })(); 
+
+blib.include("b-/b-dynamic-form/b-dynamic-form");
+blib.include("b-/b-dynamic-table/b-dynamic-table");
+blib.include("b-/b-dynamic-menu/b-dynamic-menu");
+//blib.include("b-/b-dynamic-history/b-dynamic-history");
+blib.include("b-/b-dynamic-files/b-dynamic-files");

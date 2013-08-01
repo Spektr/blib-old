@@ -1,68 +1,32 @@
 <?php header('Content-type: application/json; charset: utf8');
 
 switch($_REQUEST['a']){
-
 	case "main":
-		echo '{
-			"block":"b-main-page",
-			"container":"body",
+		echo '
+			{"container":".b-popup-test",
 			"content":[
-				{"elem":"header",
-				"mods":{"style":"amtel"},
+				{"attrs":{"style":{"float":"right", "width":"95%"}},
 				"content":[
-					{"block":"b-popup-menu",
-					"mods":{"style":"amtel"},
+					{"attrs":{"style":{"border":"1px solid black", "height":"50px"}},
 					"content":[
-						{"elem":"content"},
-						{"elem":"opener", "content":"меню", "attrs":{"data-test":{"a":1, "b":2}, "onclick":"function(){$(\'.b-popup-menu__content\').toggleClass(\"b-popup-menu__content_closed\",1500);}"}}
+						{"attrs":{"className":"b-dynamic-menu__selected-cell", "style":{"width":"150px", "float":"left"}},
+						"content":"сюда грузит выбраный пункт"
+						},
+						{"attrs":{"className":"b-dynamic-history__wrapper"},
+						"content":[{"block":"b-dynamic-history"}]
+						}
 					]},
-					
-					{"block":"b-grid",
-					"content":[
-						{"elem":"cell",
-						"mods":{"right":false},
-						"attrs":{"className":"b-main-page__auth"},
-						"content":[
-							{"block":"form",
-							"class":"b-autorisation",
-							"name":"clients",
-							"action":"?",
-							"method":"POST",
-							"content":[
-								{"type":"text",
-								"name":"login",
-								"value":"Введите логин"
-								},
-								{"type":"password",
-								"name":"password",
-								"value":"Введите пароль"
-								},
-								{"type":"submit",
-								"value":"Войти"
-								},
-								{"type":"button",
-								"value":"Напомнить пароль",
-								"action":"forget pass"
-								}
-							]}
-						]},
-						
-						{"elem":"cell",
-						"mods":{"left":false},
-						"attrs":{"className":"b-dynamic-menu__selected-cell b-main-page__logo"},
-						"content":[
-							{"attrs":{"className":"b-main-page__bg-logo"}}
-						]},
-						
-						{"elem":"cell",
-						"attrs":{"className":"b-dynamic-history__wrapper"},
-						"content":[
-							{"block":"b-dynamic-history"}
-						]}
-					]}
+					{"attrs":{"style":{"border":"1px solid black"}, "className":"b-dynamic-menu__content b-main-page__panel  b-main-page__panel"},
+					"content":"а сюда контент"
+					}
 				]},
 				
-				{"elem":"panel", "content":"здесь контент"},
+				{"block":"b-popup-menu",
+				"mods":{"style":"amtel"},
+				"content":[
+					{"elem":"content", "attrs":{"className":"b-popup-menu__content_closed"}},
+					{"elem":"opener", "content":"меню", "attrs":{"data-test":{"a":1, "b":2}, "onclick":"function(){$(\'.b-popup-menu__content\').toggleClass(\"b-popup-menu__content_closed\",1500);}"}}
+				]},
 				
 				{"block":"menu",
 				"class":"b-menu_amtel b-dynamic-menu_transparent_off",
@@ -100,14 +64,10 @@ switch($_REQUEST['a']){
 					"description":"",
 					"action":"tarifs"
 					}
-				]}				
+				]}
+				
 			]}
 		';		
-	break;
-	
-	case "auth":
-		echo '';
-		
 	break;
 	
 	case "client":
