@@ -10,47 +10,83 @@
 				console.log(key+" is not defined");
 			}
 		},
+		firstContainer = false,
 		curentBlock = "",
-		applyBuild = function(data){
+		deferredTask = {},
+		applyDeferredTask = function(){
+			var temp = [];
+			for(key in deferredTask){temp.push(key);}
+			if(!blib.apply(this,temp).length){return true;}
+			for(key in deferredTask){
+				if(!blib(key).length){continue;}
+				blib(key).html("").append(deferredTask[key]);
+				delete deferredTask[key];
+			}
+			applyDeferredTask();
+		},		
+		applyBuild = function(data, curentBlock){
 			if(!data){return false;}	//выходим если данных нет
-			if(data['block'] in constructors){return applyConstructor(data['block'], data);}	//если найден альтернативный застройщик юзаем его
+			
+			//если найден альтернативный застройщик юзаем его
+			if(data['block'] in constructors){
+				var temp=applyConstructor(data['block'], data);
+				if(temp && data['container']){
+					deferredTask[data['container']]=temp;
+					temp=false;
+				};
+				return temp;
+			}
+			
 			var curentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (curentBlock+"__"+data['elem']);}else{return false;}})(),
 				answer = [],
 				result = document.createElement(data['tag']||"div");
+				
+			if(!firstContainer && data['container']){firstContainer=data['container'];}
 			if(data['block']){curentBlock=data['block'];}	//забиваем текущий блок
 			if(curentClass){result.className = curentClass};	//оформляем классом
-			
 			//устанавливаем модификаторы
 			if(curentClass && data['mods']){
-				for(key in mods){
-					result.className +=" "+curentClass+"_"+key+((data['mods'][key])?"_"+data['mods'][key]:"");
+				for(key in data['mods']){
+					result.className +=' '+curentClass+"_"+key+((data['mods'][key])?"_"+data['mods'][key]:"");
 				}
 			}
-			
 			//задаем атрибуты
 			if(data['attrs']){
 				for(key in data['attrs']){
-					result[key] = (typeof(data['attrs'][key])=="string")?data['attrs'][key]:(JSON.strnigify(data['attrs'][key]));
+					if(typeof(data['attrs'][key])=="string"){
+						if(data['attrs'][key].indexOf("function")!=0){
+							result[key] += " "+data['attrs'][key];
+						}else{
+							result[key] = eval('('+data['attrs'][key]+')');
+						}
+					}else{
+						result[key] = JSON.stringify(data['attrs'][key]);
+					}
 				}
 			}
-			
 			//проверяем есть ли вложенность и рекурсивно обрабатываем если есть
 			switch(typeof(data['content'])){
 				case "object":
-					for(key in data['content']){answer.push(applyBuild(data['content'][key]));}
+					for(key in data['content']){answer.push(applyBuild(data['content'][key],curentBlock));}
 				break;
-				default:
+				case "string":
 					answer.push(data['content']);
 				break;
 			}
 			
 			//заполняем текущий элемент вложенными в него
-			for(i in answer){if(answer[i]["innerHTML"]){result.appendChild(answer[i]);}else{ result.innerHTML+=answer[i];}};
+			for(i in answer){if(typeof(answer[i])=="object"){result.appendChild(answer[i]);}else if(answer[i]){ result.innerHTML+=answer[i];}};
 			
 			
 			//если есть контейнер то добавляем в него
-			if(data['container']){
+			if(blib(data['container']).length){
 				blib(data['container']).html("").append(result);
+				if(data['container'] == firstContainer){
+					applyDeferredTask();
+				}
+			}else if(data['container']){
+				deferredTask[data['container']]=result;
+				return false;
 			}else{
 				return result;
 			}
@@ -74,7 +110,6 @@
 			data:serializeData,
 			dataType: "json",
 			success: function(data){
-				console.log(data);
 				/*хрень для истории*/
 				var historyData = {'request':dataObject, 'answer':data};
 				applyConstructor("dynamicHistory", historyData);
@@ -88,11 +123,3 @@
 	window.blib.build.handler = applyBuild;
 	
 })(); 
-
-//added dynamic blocks
-blib.include("b-/b-dynamic-form/b-dynamic-form");
-blib.include("b-/b-dynamic-table/b-dynamic-table");
-blib.include("b-/b-dynamic-menu/b-dynamic-menu");
-blib.include("b-/b-dynamic-history/b-dynamic-history");
-blib.include("b-/b-dynamic-files/b-dynamic-files");
-blib.include("b-/b-dynamic-skeleton/b-dynamic-skeleton");

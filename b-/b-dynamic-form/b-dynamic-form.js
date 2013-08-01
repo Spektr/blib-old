@@ -279,7 +279,7 @@ $(function(){
 		//каким классом оформлен
 		if(data['class']){form.addClass(data['class']);};
 		//куда будет загружен
-		if(data['container']){
+		if($(data['container'])[0]){
 			$(data['container']).html(form);
 			return false;
 		}else{

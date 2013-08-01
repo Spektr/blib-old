@@ -1,7 +1,6 @@
 $(function(){
 	
 	blib.build("menu", createMenu); //указываем процаку как обрабатывать такого рода запрос
-    blib.build({'a':"menu"});	//ну и посылаем этот запрос
 		
 	//функция создания меню из переданных данных
 	function createMenu(data){
@@ -48,8 +47,9 @@ $(function(){
 		}
 		//каким классом оформлен
 		if(data['class']){result.addClass(data['class']);};
+		
 		//куда будет загружен
-		if(data['container']){
+		if($(data['container'])[0]){
 			$(data['container']).html(result);
 			return false;
 		}else{

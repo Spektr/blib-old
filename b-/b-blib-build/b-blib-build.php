@@ -2,157 +2,111 @@
 
 switch($_REQUEST['a']){
 
-	case "satellist":
+	case "main":
 		echo '{
-			"block":"b-dynamic-skeleton",
-			"container":".b-main-page__panel",
+			"block":"b-main-page",
+			"container":"body",
 			"content":[
-				{"elem":"item", "content":"лоланочо"},
-				{"elem":"item", "content":[
-					{"elem":"item", "tag":"li", "content":"Второй пункт"},
-					{"elem":"item", "tag":"li", "content":"Второй пункт"}
+				{"elem":"header",
+				"mods":{"style":"amtel"},
+				"content":[
+					{"block":"b-popup-menu",
+					"mods":{"style":"amtel"},
+					"content":[
+						{"elem":"content"},
+						{"elem":"opener", "content":"меню", "attrs":{"data-test":{"a":1, "b":2}, "onclick":"function(){$(\'.b-popup-menu__content\').toggleClass(\"b-popup-menu__content_closed\",1500);}"}}
+					]},
+					
+					{"block":"b-grid",
+					"content":[
+						{"elem":"cell",
+						"mods":{"right":false},
+						"attrs":{"className":"b-main-page__auth"},
+						"content":[
+							{"block":"form",
+							"class":"b-autorisation",
+							"name":"clients",
+							"action":"?",
+							"method":"POST",
+							"content":[
+								{"type":"text",
+								"name":"login",
+								"value":"Введите логин"
+								},
+								{"type":"password",
+								"name":"password",
+								"value":"Введите пароль"
+								},
+								{"type":"submit",
+								"value":"Войти"
+								},
+								{"type":"button",
+								"value":"Напомнить пароль",
+								"action":"forget pass"
+								}
+							]}
+						]},
+						
+						{"elem":"cell",
+						"mods":{"left":false},
+						"attrs":{"className":"b-dynamic-menu__selected-cell b-main-page__logo"},
+						"content":[
+							{"attrs":{"className":"b-main-page__bg-logo"}}
+						]},
+						
+						{"elem":"cell",
+						"attrs":{"className":"b-dynamic-history__wrapper"},
+						"content":[
+							{"block":"b-dynamic-history"}
+						]}
+					]}
 				]},
-				{"elem":"item", "content":"лоланочо3"},
-				{
-				  "block":"menu",
-				  "class":"b-dynamic-menu2",
-				  "items":[
-					{
-						"title":"клиенты",
-						"description":"",
-						"action":"client"
-					},
-					{
-						"title":"агенты",
-						"description":"",
-						"action":"agent"
-					}
-					]
-				}
-			]
-		}';		
-	break;
-
-/*{
-  "block":"b-menu",
-  "container":[".b-page__content","#divaha", "a"],
-  "tag":"ul",
-  "attrs":{"id":"menu1", "src":"http://amtelcom.ru", "alt":"Upchk", "style":'"width":"200px"; "float":"right";', "data-json":{"id":3, "name":"menuha"}, "onmouseover":function(){alert(this);}},
-  "mods":{"color":"red", "size":"big", "oriented":"clients"},
-  "content":[
-    {"elem":"item", "tag":"li", "content":"Первый пункт", "attrs":{"onclick":function(){document.location.href = this['src']; }} },
-    {"elem":"item", "tag":"li", "content":"Второй пункт"},
-    {
-    "elem":"item",
-    "tag":"li",
-    "content":[
-      {
-      "block":"message",
-      "class":"dynamic-table",
-      "container":"dynamic-table",
-      "buttons":"YesNoCancel",
-      "image":"Question",
-      "defaultButton":2,
-      "title":"Заголовок окна",
-      "text":"Текст сообщения"
-      },
-      {"elem":"icon", "tag":"img", "attrs":{"src":"http://amtelcom.ru/img/icon.png"}},
-    ]},
-    {
-      "block":"menu",
-      "class":"b-dynamic-menu2",
-      "container":".b-dynamic-menu",
-      "items":{
-        "name":"agents",
-        "title":"Агенты",
-        "description":"Отображение действий с агентами"
-      }
-    },
- 
-  ]
-}*/
-
-
-	case "menu":
-		echo '{
-			"block":"menu",
-			"class":"b-menu_amtel b-dynamic-menu_transparent_off",
-			"container":".b-popup-menu__content",
-			"items":[
-				{
-					"title":"клиенты",
+				
+				{"elem":"panel", "content":"здесь контент"},
+				
+				{"block":"menu",
+				"class":"b-menu_amtel b-dynamic-menu_transparent_off",
+				"container":".b-popup-menu__content",
+				"items":[
+					{"title":"клиенты",
 					"description":"",
 					"action":"client"
-				},
-				{
-					"title":"агенты",
+					},
+					{"title":"агенты",
 					"description":"",
 					"action":"agent"
-				},
-				{
-					"title":"спутники",
+					},
+					{"title":"спутники",
 					"description":"",
 					"action":"satellist"
-				},
-				{
-					"title":"станции",
+					},
+					{"title":"станции",
 					"description":"",
 					"action":"station"
-				},
-				{
-					"title":"1С",
+					},
+					{"title":"1С",
 					"description":"",
 					"action":"one_s"
-				},
-				{
-					"title":"статистика",
+					},
+					{"title":"статистика",
 					"description":"",
 					"action":"statistic"
-				},
-				{
-					"title":"плат.карты",
+					},
+					{"title":"плат.карты",
 					"description":"",
 					"action":"cardgen"
-				},
-				{
-					"title":"тарифы",
+					},
+					{"title":"тарифы",
 					"description":"",
 					"action":"tarifs"
-				}
-			]
-		}';
+					}
+				]}				
+			]}
+		';		
 	break;
 	
 	case "auth":
-		echo '{
-		  "block":"form",
-		  "class":"b-autorisation",
-		  "container":".b-main-page__auth",
-		  "name":"clients",
-		  "action":"?",
-		  "method":"POST",
-		  "content":[
-			{
-			  "type":"text",
-			  "name":"login",
-			  "value":"Введите логин"
-			},
-			{
-			  "type":"password",
-			  "name":"password",
-			  "value":"Введите пароль"
-			},
-			{
-			  "type":"submit",
-			  "value":"Войти"
-			},
-			{
-			  "type":"button",
-			  "value":"Напомнить пароль",
-			  "action":"forget pass"
-			}
-		  ]
-		}';
+		echo '';
 		
 	break;
 	
