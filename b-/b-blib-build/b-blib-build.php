@@ -1,75 +1,200 @@
-<?php header('Content-type: application/json; charset: utf8');
+<?php
+///*
+error_reporting(E_ALL);
+ini_set('display_errors',1);
+//*/
 
+if(strpos($_GET['a'],"_")) list($_GET['a'],$_GET['view'])=explode("_",$_GET['a'],2);
+if($_GET['a']=='list'||$_GET['a']=='get'||$_GET['a']=='add'||$_GET['a']=='edit'||$_GET['a']=='delete'){
+//header('Content-Type: application/json; charset=utf-8');
+header('Content-Type: text/html; charset=utf-8');
+require_once('meta.php');
+require_once('config.php');
+$mysqli=new mysqli($db_conf['host'],$db_conf['user'],$db_conf['password'],$db_conf['database']);
+if($mysqli->connect_errno) die("Connect Error #".$mysqli->connect_errno.". ".$mysqli->connect_error);
+$mysqli->query("SET NAMES utf8");
+$a=$mysqli->real_escape_string($_GET['a']);
+$view=$mysqli->real_escape_string($_GET['view']);
+
+$meta=new Meta($mysqli,$view);
+$params=array();
+//$_POST['users_id']=$_GET['users_id'];
+foreach($_POST as $key=>$value){
+	$params[$mysqli->real_escape_string($key)]=$mysqli->real_escape_string($value);
+}
+$answer=$meta->build($a,$params);
+echo json_encode($answer,256);
+/****************************************************************************************************************/
+}
+else{
+
+header('Content-type: application/json; charset: utf8');
 switch($_REQUEST['a']){
+
 	case "main":
 		echo '
-			{"container":".b-popup-test",
-			"content":[
-				{"attrs":{"style":{"float":"right", "width":"95%"}},
-				"content":[
-					{"attrs":{"style":{"border":"1px solid black", "height":"50px"}},
-					"content":[
-						{"attrs":{"className":"b-dynamic-menu__selected-cell", "style":{"width":"150px", "float":"left"}},
-						"content":"сюда грузит выбраный пункт"
-						},
-						{"attrs":{"className":"b-dynamic-history__wrapper"},
-						"content":[{"block":"b-dynamic-history"}]
-						}
-					]},
-					{"attrs":{"style":{"border":"1px solid black"}, "className":"b-dynamic-menu__content b-main-page__panel  b-main-page__panel"},
-					"content":"а сюда контент"
-					}
-				]},
-				
-				{"block":"b-popup-menu",
-				"mods":{"style":"amtel"},
-				"content":[
-					{"elem":"content", "attrs":{"className":"b-popup-menu__content_closed"}},
-					{"elem":"opener", "content":"меню", "attrs":{"data-test":{"a":1, "b":2}, "onclick":"function(){$(\'.b-popup-menu__content\').toggleClass(\"b-popup-menu__content_closed\",1500);}"}}
-				]},
-				
-				{"block":"menu",
-				"class":"b-menu_amtel b-dynamic-menu_transparent_off",
-				"container":".b-popup-menu__content",
-				"items":[
-					{"title":"клиенты",
-					"description":"",
-					"action":"client"
-					},
-					{"title":"агенты",
-					"description":"",
-					"action":"agent"
-					},
-					{"title":"спутники",
-					"description":"",
-					"action":"satellist"
-					},
-					{"title":"станции",
-					"description":"",
-					"action":"station"
-					},
-					{"title":"1С",
-					"description":"",
-					"action":"one_s"
-					},
-					{"title":"статистика",
-					"description":"",
-					"action":"statistic"
-					},
-					{"title":"плат.карты",
-					"description":"",
-					"action":"cardgen"
-					},
-					{"title":"тарифы",
-					"description":"",
-					"action":"tarifs"
-					}
-				]}
-				
-			]}
-		';		
-	break;
-	
+{
+  "block":"b-main-page",
+  "container":"body",
+  "content":[
+    {
+      "elem":"header",
+      "mods":{
+        "style":"amtel"
+      },
+      "content":[
+        {
+          "block":"b-popup-menu",
+          "mods":{
+            "style":"amtel"
+          },
+          "content":[
+            {
+              "elem":"content"
+            },
+            {
+              "elem":"opener",
+              "content":"меню",
+              "attrs":{
+                "data-test":{
+                  "a":1,
+                  "b":2
+                },
+                "onclick":"function(){$(\'.b-popup-menu__content\').toggleClass(\"b-popup-menu__content_closed\",1500);}"
+              }
+            }
+          ]
+        },
+        {
+          "block":"b-grid",
+          "content":[
+            {
+              "elem":"cell",
+              "mods":{
+                "right":false
+              },
+              "attrs":{
+                "className":"b-main-page__auth"
+              },
+              "content":[
+                {
+                  "block":"form",
+                  "class":"b-autorisation",
+                  "name":"clients",
+                  "action":"?",
+                  "method":"POST",
+                  "content":[
+                    {
+                      "type":"text",
+                      "name":"login",
+                      "value":"Введите логин"
+                    },
+                    {
+                      "type":"password",
+                      "name":"password",
+                      "value":"Введите пароль"
+                    },
+                    {
+                      "type":"submit",
+                      "value":"Войти"
+                    },
+                    {
+                      "type":"button",
+                      "value":"Напомнить пароль",
+                      "action":"forget pass"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "elem":"cell",
+              "mods":{
+                "left":false
+              },
+              "attrs":{
+                "className":"b-dynamic-menu__selected-cell b-main-page__logo"
+              },
+              "content":[
+                {
+                  "attrs":{
+                    "className":"b-main-page__bg-logo"
+                  }
+                }
+              ]
+            },
+            {
+              "elem":"cell",
+              "attrs":{
+                "className":"b-dynamic-history__wrapper"
+              },
+              "content":[
+                {
+                  "block":"b-dynamic-history"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "elem":"panel",
+      "content":"здесь контент"
+    },
+    {
+      "block":"menu",
+      "class":"b-menu_amtel b-dynamic-menu_transparent_off",
+      "container":".b-popup-menu__content",
+      "items":[
+        {
+          "title":"клиенты",
+          "description":"",
+          "action":"client"
+        },
+        {
+          "title":"агенты",
+          "description":"",
+          "action":"agent"
+        },
+        {
+          "title":"спутники",
+          "description":"",
+          "action":"satellist"
+        },
+        {
+          "title":"станции",
+          "description":"",
+          "action":"station"
+        },
+        {
+          "title":"1С",
+          "description":"",
+          "action":"one_s"
+        },
+        {
+          "title":"статистика",
+          "description":"",
+          "action":"statistic"
+        },
+        {
+          "title":"плат.карты",
+          "description":"",
+          "action":"cardgen"
+        },
+        {
+          "title":"тарифы",
+          "description":"",
+          "action":"tarifs"
+        }
+      ]
+    }
+  ]
+}';
+		break;
+	case "auth":
+		echo '';
+		break;
 	case "client":
 		echo '{
 			"container":".b-main-page__panel",
@@ -279,5 +404,6 @@ switch($_REQUEST['a']){
 
 }
 
-if($answer){echo json_encode($answer);}
+if(isset($answer)){echo json_encode($answer);}
+}
 ?>

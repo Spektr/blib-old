@@ -31,7 +31,7 @@ $(function(){
 					//подрубаем блок
 					var block = $(this).attr("data-action");
 					var title = $(this).attr("alt");
-					blib.build({'a':block, 'title':title});
+					blib.build({'get':{'a':block}, 'title':title});
 					
 					return false;
 			}

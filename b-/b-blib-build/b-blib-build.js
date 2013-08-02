@@ -60,11 +60,6 @@
 							result[key] = eval('('+data['attrs'][key]+')');
 						}
 					}else{
-						if(key=="style"){
-							for(atr in data['attrs'][key]){
-								result['style'][atr]=data['attrs']['style'][atr];
-							}
-						}
 						result[key] = JSON.stringify(data['attrs'][key]);
 					}
 				}
@@ -100,19 +95,25 @@
 
 	//строим при ответе сервера
 	window.blib.build = function(dataObject, callback){
-
+		
 		if((typeof callback === "function") && (typeof dataObject === "string")){
 			setConstructor(dataObject, callback);
 			return true;
 		}
-		var serializeData = "";
-		for(key in dataObject){
-			serializeData+=key+"="+dataObject[key]+"&";
+		
+		var get = "";
+		if(dataObject['get']){
+			get ="?";
+			for(key in dataObject['get']){
+				get+=key+"="+dataObject['get'][key]+"&";
+			}
+			get = get.substr(0, get.length-1);
+			delete dataObject['get'];
 		}
-		serializeData = serializeData.substr(0, serializeData.length-1);
+
 		blib.ajax({
-			url:"b-/b-blib-build/b-blib-build.php",
-			data:serializeData,
+			url:"b-/b-blib-build/b-blib-build.php"+get,
+			data:dataObject,
 			dataType: "json",
 			success: function(data){
 				/*хрень для истории*/
@@ -128,9 +129,3 @@
 	window.blib.build.handler = applyBuild;
 	
 })(); 
-
-blib.include("b-/b-dynamic-form/b-dynamic-form");
-blib.include("b-/b-dynamic-table/b-dynamic-table");
-blib.include("b-/b-dynamic-menu/b-dynamic-menu");
-//blib.include("b-/b-dynamic-history/b-dynamic-history");
-blib.include("b-/b-dynamic-files/b-dynamic-files");

@@ -77,13 +77,20 @@ window.blib =(function(){
 					}
 				}
 				
-				if(dataObject['dataType']!="html"){
+				if(typeof(dataObject['data'])=="object"){
+					var temp = "";
+					for(key in dataObject['data']){
+						temp+=key+"="+dataObject['data'][key]+"&";
+					}
+					dataObject['data'] = temp.substr(0, temp.length-1);
+				}
+				
+				if(dataObject['type']!="GET"){
 					xhr.open("POST", dataObject['url'], true);
 					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 					xhr.send(dataObject['data']);
 				}else{
-					var rData = (dataObject['data'])?"?"+dataObject['data']:"";
-					xhr.open("GET", dataObject['url']+rData, true);
+					xhr.open("GET", dataObject['url']+(dataObject['url'].indexOf("?")!=-1?"&":"?")+dataObject['data'], true);
 					xhr.setRequestHeader("Content-Type", "text/html");
 					xhr.send(null);
 				}
