@@ -129,3 +129,8 @@
 	window.blib.build.handler = applyBuild;
 	
 })(); 
+
+blib.include("b-/b-dynamic-files/b-dynamic-files");
+blib.include("b-/b-dynamic-form/b-dynamic-form");
+blib.include("b-/b-dynamic-menu/b-dynamic-menu");
+blib.include("b-/b-dynamic-table/b-dynamic-table");
