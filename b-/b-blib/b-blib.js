@@ -72,7 +72,7 @@ window.blib =(function(){
 			if (xhr) {
 				xhr.onreadystatechange = function(){
 					if (xhr.readyState === 4 && xhr.status === 200) {
-						var rData = (dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
+						var rData = (dataObject['dataType'] && dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
 						dataObject['success'](rData);
 					}
 				}
