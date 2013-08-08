@@ -1,5 +1,6 @@
 (function(){
 	var constructors ={},								//массив конструкторов
+        iterations =[],                                 //массив запросов и ответов
 		setConstructor = function(key, func){			//установка конструктора
 			constructors[key]=func;
 		},
@@ -10,8 +11,18 @@
 				console.log(key+" is not defined");
 			}
 		},
+        setIteration = function(question, answer){			//установка запроса+ответа
+            iterations[iterations.length]={'question':question, 'answer':answer}
+        },
+        getIteration = function(index){			//применение конструктора
+            if(index in iterations){
+                return iterations[index];
+            }else{
+                console.log("iteration "+index+" is not defined");
+            }
+        },
 		firstContainer = false,
-		curentBlock = "",
+		currentBlock = "",
 		deferredTask = {},
 		applyDeferredTask = function(){
 			var i=0, temp;
@@ -24,7 +35,7 @@
 			}
 			if(i>0)applyDeferredTask();
 		},		
-		applyBuild = function(data, curentBlock){
+		applyBuild = function(data, currentBlock){
 			if(!data){return false;}	//выходим если данных нет
 			
 			//если найден альтернативный застройщик юзаем его 0_0
@@ -36,17 +47,17 @@
 				return applyConstructor(data['block'], data);
 			}
 			
-			var curentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (curentBlock+"__"+data['elem']);}else{return false;}})(),
+			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
 				answer = [],
 				result = document.createElement(data['tag']||"div");
 				
 			if(!firstContainer && data['container']){firstContainer=data['container'];}
-			if(data['block']){curentBlock=data['block'];}	//забиваем текущий блок
-			if(curentClass){result.className = curentClass};	//оформляем классом
+			if(data['block']){currentBlock=data['block'];}	//забиваем текущий блок
+			if(currentClass){result.className = currentClass};	//оформляем классом
 			//устанавливаем модификаторы
-			if(curentClass && data['mods']){
+			if(currentClass && data['mods']){
 				for(key in data['mods']){
-					result.className +=' '+curentClass+"_"+key+((data['mods'][key])?"_"+data['mods'][key]:"");
+					result.className +=' '+currentClass+"_"+key+((data['mods'][key])?"_"+data['mods'][key]:"");
 				}
 			}
 			//задаем атрибуты
@@ -66,7 +77,7 @@
 			//проверяем есть ли вложенность и рекурсивно обрабатываем если есть
 			switch(typeof(data['content'])){
 				case "object":
-					for(key in data['content']){answer.push(applyBuild(data['content'][key],curentBlock));}
+					for(key in data['content']){answer.push(applyBuild(data['content'][key],currentBlock));}
 				break;
 				case "string":
 					answer.push(data['content']);
@@ -115,6 +126,7 @@
 			data:dataObject,
 			dataType: "json",
 			success: function(data){
+                setIteration(dataObject, data);
 				applyBuild(data);
 			}
 		});

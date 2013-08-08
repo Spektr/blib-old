@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json; charset: utf8');
+header('Content-type: application/json; charset: utf-8');
 switch($_REQUEST['a']){
 
 	case "main":
