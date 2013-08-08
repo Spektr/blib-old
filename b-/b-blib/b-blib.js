@@ -49,8 +49,10 @@ window.blib =(function(){
 				return this;
 			};			
 			result.append = function(obj){
-				for(var len = this.length, i=0; i<len; i++){
-					this[i].appendChild(obj);
+				if(typeof(obj)=="object"){
+					for(var len = this.length, i=0; i<len; i++){
+						this[i].appendChild(obj);
+					}
 				}
 				return this;
 			};
@@ -72,7 +74,7 @@ window.blib =(function(){
 			if (xhr) {
 				xhr.onreadystatechange = function(){
 					if (xhr.readyState === 4 && xhr.status === 200) {
-						var rData = (dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
+						var rData = (dataObject['dataType'] && dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
 						dataObject['success'](rData);
 					}
 				}

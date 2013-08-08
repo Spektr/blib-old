@@ -14,27 +14,26 @@
 		curentBlock = "",
 		deferredTask = {},
 		applyDeferredTask = function(){
-			var temp = [];
-			for(key in deferredTask){temp.push(key);}
-			if(!blib.apply(this,temp).length){return true;}
+			var i=0, temp;
 			for(key in deferredTask){
 				if(!blib(key).length){continue;}
-				blib(key).html("").append(deferredTask[key]);
+				i++;
+				temp = (deferredTask[key].block)?applyConstructor(deferredTask[key].block, deferredTask[key]):deferredTask[key];
+				if(temp){blib(key).html("").append(temp);}
 				delete deferredTask[key];
 			}
-			applyDeferredTask();
+			if(i>0)applyDeferredTask();
 		},		
 		applyBuild = function(data, curentBlock){
 			if(!data){return false;}	//выходим если данных нет
 			
-			//если найден альтернативный застройщик юзаем его
+			//если найден альтернативный застройщик юзаем его 0_0
 			if(data['block'] in constructors){
-				var temp=applyConstructor(data['block'], data);
-				if(temp && data['container']){
-					deferredTask[data['container']]=temp;
-					temp=false;
+				if(data['container']){
+					deferredTask[data['container']]=data;
+					return false;
 				};
-				return temp;
+				return applyConstructor(data['block'], data);
 			}
 			
 			var curentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (curentBlock+"__"+data['elem']);}else{return false;}})(),
@@ -116,10 +115,6 @@
 			data:dataObject,
 			dataType: "json",
 			success: function(data){
-				/*хрень для истории*/
-				var historyData = {'request':dataObject, 'answer':data};
-				applyConstructor("dynamicHistory", historyData);
-				/*хрень для истории*/
 				applyBuild(data);
 			}
 		});
@@ -130,7 +125,3 @@
 	
 })(); 
 
-blib.include("b-/b-dynamic-files/b-dynamic-files");
-blib.include("b-/b-dynamic-form/b-dynamic-form");
-blib.include("b-/b-dynamic-menu/b-dynamic-menu");
-blib.include("b-/b-dynamic-table/b-dynamic-table");
