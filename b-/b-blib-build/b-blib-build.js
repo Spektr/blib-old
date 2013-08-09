@@ -1,6 +1,6 @@
 (function(){
-	var constructors ={},								//массив конструкторов
-        iterations =[],                                 //массив запросов и ответов
+	var /** применение особых обработчиков для ответа */
+		constructors ={},								//массив конструкторов
 		setConstructor = function(key, func){			//установка конструктора
 			constructors[key]=func;
 		},
@@ -11,7 +11,9 @@
 				console.log(key+" is not defined");
 			}
 		},
-        setIteration = function(question, answer){			//установка запроса+ответа
+		/** хранение истории запросов */
+		iterations =[],                                 //массив запросов и ответов
+        setIteration = function(question, answer){		//установка запроса+ответа
             iterations[iterations.length]={'question':question, 'answer':answer}
         },
         getIteration = function(index){			//применение конструктора
@@ -21,8 +23,7 @@
                 console.log("iteration "+index+" is not defined");
             }
         },
-		firstContainer = false,
-		currentBlock = "",
+		/** применение отложенных заданий*/
 		deferredTask = {},
 		applyDeferredTask = function(){
 			var i=0, temp;
@@ -34,7 +35,10 @@
 				delete deferredTask[key];
 			}
 			if(i>0)applyDeferredTask();
-		},		
+		},
+		/** сборка серверного ответа */
+		firstContainer = false,
+		currentBlock = "",
 		applyBuild = function(data, currentBlock){
 			if(!data){return false;}	//выходим если данных нет
 			
@@ -62,16 +66,31 @@
 			}
 			//задаем атрибуты
 			if(data['attrs']){
+				console.log(data['attrs']);
 				for(key in data['attrs']){
-					if(typeof(data['attrs'][key])=="string"){
-						if(data['attrs'][key].indexOf("function")!=0){
-							result[key] += " "+data['attrs'][key];
-						}else{
-							result[key] = eval('('+data['attrs'][key]+')');
-						}
+					var attr = data['attrs'][key],
+						type = typeof(attr),
+						temp;
+					
+					if(type=="object"){
+						temp = JSON.stringify(attr);
+					}else if(type!="string"){
+						continue;
+					}else if(attr.substr(0, 8)=="function"){
+						result[key] = eval('('+attr+')');
+						continue;
 					}else{
-						result[key] = JSON.stringify(data['attrs'][key]);
+						temp = attr;
 					}
+					
+					if(result[key]){
+						result[key] += " "+temp;
+					}else if(result.setAttribute){
+						result.setAttribute(key, temp);
+					}else{
+						result[key] = temp;
+					}
+
 				}
 			}
 			//проверяем есть ли вложенность и рекурсивно обрабатываем если есть
