@@ -12,12 +12,14 @@
 			}
 		},
 		/** хранение истории запросов */
+		currentIteration = 0;
 		iterations =[],                                 //массив запросов и ответов
         setIteration = function(question, answer){		//установка запроса+ответа
-            iterations[iterations.length]={'question':question, 'answer':answer}
+            iterations[++currentIteration]={'question':question, 'answer':answer}
         },
         getIteration = function(index){			//применение конструктора
             if(index in iterations){
+		currentIteration = index;
                 return iterations[index];
             }else{
                 console.log("iteration "+index+" is not defined");
