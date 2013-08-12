@@ -122,9 +122,19 @@
 				return result;
 			}
 			
+		},
+		/** колбаки после получения ответа и перестройки дерева */
+		readyFunctions = [];
+		ready = function(obj){
+			if(typeof(obj)=="function"){readyFunctions.push(obj);return true;}
+			
+			for(var len = readyFunctions.length, i=0; i<len; i++){
+				readyFunctions[i](obj);
+			}
+			
 		};
 
-	//строим при ответе сервера
+	//строим при ответе сервера или задаем обработчик
 	window.blib.build = function(dataObject, callback){
 		
 		if((typeof callback === "function") && (typeof dataObject === "string")){
@@ -149,12 +159,15 @@
 			success: function(data){
                 setIteration(dataObject, data);
 				applyBuild(data);
+				ready(data);
 			}
 		});
 	};
 	
 	//строим по входящим данным
 	window.blib.build.handler = applyBuild;
+	//постобработка
+	window.blib.build.ready = ready;
 	
 })(); 
 
