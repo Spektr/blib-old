@@ -1,29 +1,21 @@
 $(function(){
 
-	blib.build("dynamicHistory", dynamicHistory);		//передаем обработчик ответа сервера для создания 
+	blib.build.ready(dynamicHistory);		//передаем обработчик, вызываемый после перестройки каждого запроса
 	
-	var iterations =[];									//массив серверных ответов
-	var satIteration = function(request, answer){		//запись ответа
-		var index = iterations.length;
-		iterations[index]=[];
-		iterations[index]['request'] = request;
-		iterations[index]['answer'] = answer;
-	}
-	var clearIteration = function(index){				//очищение ответа
-		iterations = iterations.slice(0, index);
-		var data = iterations[index-1]['answer'];
-		blib.build.handler(data);
-	}
-	
-	//собственно сам обработчик
-	function dynamicHistory(historyData){
-		if(historyData['request']['title']){var message = historyData['request']['title']}else{return false;}
-		satIteration(historyData['request'],historyData['answer']);
+	//собственно сам обработчик getCurrentIteration
+	function dynamicHistory(data){
+		
+		var currIteration = blib.build.getCurrentIteration(),
+			iteration = blib.build.getIteration(currIteration);
+
+		if(iteration['request']['title']){var message =iteration['request']['title']}else{return false;}
 		var statusLink = $('<a />', {'href':"#",'class':"b-dynamic-history__link", 'text':message});
 		
 		statusLink.on('click', function(){
-			clearIteration($(this).index()+1);
 			$(this).nextAll('.b-dynamic-history__link').remove();
+			$(this).remove();
+			blib.build.setCurrentIteration(currIteration-1);
+			window.blib.build(iteration['request']);			
 		});
 		
 		$('.b-dynamic-history').append(statusLink);

@@ -12,18 +12,25 @@
 			}
 		},
 		/** хранение истории запросов */
-		currentIteration = 0;
+		currentIteration = -1;
 		iterations =[],                                 //массив запросов и ответов
-        setIteration = function(question, answer){		//установка запроса+ответа
-            iterations[++currentIteration]={'question':question, 'answer':answer}
+		getCurrentIteration =function(){
+            return currentIteration;
         },
-        getIteration = function(index){			//применение конструктора
+		setCurrentIteration =function(num){
+            currentIteration = num;
+        },
+        setIteration = function(request, answer){		//установка итерации (запроса+ответа)
+            iterations[++currentIteration]={'request':request, 'answer':answer};
+			console.log(iterations);
+			iterations.splice(currentIteration+1, iterations.length-currentIteration);
+
+        },
+        getIteration = function(index){					//получение итерации
             if(index in iterations){
-		currentIteration = index;
                 return iterations[index];
-            }else{
-                console.log("iteration "+index+" is not defined");
             }
+			return false;
         },
 		/** применение отложенных заданий*/
 		deferredTask = {},
@@ -135,14 +142,15 @@
 		};
 
 	//строим при ответе сервера или задаем обработчик
-	window.blib.build = function(dataObject, callback){
+	var $ = function(dataObject, callback){
 		
 		if((typeof callback === "function") && (typeof dataObject === "string")){
 			setConstructor(dataObject, callback);
 			return true;
 		}
 		
-		var get = "";
+		var startDataObject=JSON.parse(JSON.stringify(dataObject)),
+			get = "";
 		if(dataObject['get']){
 			get ="?";
 			for(key in dataObject['get']){
@@ -157,7 +165,7 @@
 			data:dataObject,
 			dataType: "json",
 			success: function(data){
-                setIteration(dataObject, data);
+                setIteration(startDataObject, data);
 				applyBuild(data);
 				ready(data);
 			}
@@ -165,9 +173,15 @@
 	};
 	
 	//строим по входящим данным
-	window.blib.build.handler = applyBuild;
+	$.handler = applyBuild;
 	//постобработка
-	window.blib.build.ready = ready;
+	$['ready'] = ready;
+	$['getCurrentIteration'] = getCurrentIteration;
+	$['setCurrentIteration'] = setCurrentIteration;
+	$['setIteration'] = setIteration;
+	$['getIteration'] = getIteration;
+	
+	window.blib.build = $;
 	
 })(); 
 
