@@ -36,7 +36,7 @@
 				if(temp){blib(key).html("").append(temp);}
 				delete deferredTask[key];
 			}
-			if(i>0)applyDeferredTask();
+			if(i>0)applyDeferredTask();			
 		},
 		/** сборка серверного ответа */
 		firstContainer = false,
@@ -46,7 +46,7 @@
 			
 			//если найден альтернативный застройщик юзаем его 0_0
 			if(data['block'] in constructors){
-				if(data['container']){
+				if(data['container'] && firstContainer){
 					deferredTask[data['container']]=data;
 					return false;
 				};
@@ -68,7 +68,6 @@
 			}
 			//задаем атрибуты
 			if(data['attrs']){
-				console.log(data['attrs']);
 				for(key in data['attrs']){
 					var attr = data['attrs'][key],
 						type = typeof(attr),
@@ -87,7 +86,7 @@
 					
 					if(result[key]){
 						result[key] += " "+temp;
-					}else if(result.setAttribute){
+					}else if(result.setAttribute && key!=="className"){
 						result.setAttribute(key, temp);
 					}else{
 						result[key] = temp;
@@ -114,6 +113,7 @@
 				blib(data['container']).html("").append(result);
 				if(data['container'] == firstContainer){
 					applyDeferredTask();
+					firstContainer = false;
 				}
 			}else if(data['container']){
 				deferredTask[data['container']]=result;
