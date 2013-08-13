@@ -41,7 +41,7 @@ $(function(){
 		for(var i=0; i<data['items'].length; i++){
 			var div = $('<div />', {'class':"b-dynamic-menu__cell", 'alt': data['items'][i]['title'], 'data-action':data['items'][i]['action']});
 			div.on('click', itemAction);
-			var span = $('<span />', {'class':"b-pic b-pic__amtel b-pic__amtel_"+data['items'][i]['action'].replace(/\_/g, '-')});
+			var span = $('<span />', {'class':"b-pic b-pic__amtel b-pic__amtel_"+data['items'][i]['action']});
 			div.append(span);
 			result.append(div);
 		}

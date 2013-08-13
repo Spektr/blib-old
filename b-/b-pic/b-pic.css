@@ -28,6 +28,7 @@
 	height: 45px;
 	background-position: -540px 0;
 }
+.b-pic__amtel_get_all_clients:before,
 .b-pic__amtel_client:before{
 	width:45px;
 	height:45px;
@@ -48,7 +49,7 @@
 	height:45px;
 	background-position: -315px 0;
 }
-.b-pic__amtel_one-s:before{
+.b-pic__amtel_one_s:before{
 	width:45px;
 	height:45px;
 	background-position: -360px 0;
@@ -69,13 +70,16 @@
 	background-position: -495px 0;
 }
 
-.b-pic__amtel_add:before{
+.b-pic__amtel_add:before,
+.b-pic__amtel_add_user:before{
 	background-position: 0 -45px;
 }
-.b-pic__amtel_edit:before{
+.b-pic__amtel_edit:before,
+.b-pic__amtel_edit_user:before{
 	background-position: -25px -45px;
 }
-.b-pic__amtel_del:before{
+.b-pic__amtel_del:before,
+.b-pic__amtel_del_user:before{
 	background-position: -50px -45px;
 }
 .b-pic__amtel_mail:before{
