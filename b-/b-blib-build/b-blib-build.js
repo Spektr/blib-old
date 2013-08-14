@@ -22,9 +22,7 @@
         },
         setIteration = function(request, answer){		//установка итерации (запроса+ответа)
             iterations[++currentIteration]={'request':request, 'answer':answer};
-			console.log(iterations);
 			iterations.splice(currentIteration+1, iterations.length-currentIteration);
-
         },
         getIteration = function(index){					//получение итерации
             if(index in iterations){
@@ -142,7 +140,7 @@
 		};
 
 	//строим при ответе сервера или задаем обработчик
-	var $ = function(dataObject, callback){
+	var build = function(dataObject, callback){
 		
 		if((typeof callback === "function") && (typeof dataObject === "string")){
 			setConstructor(dataObject, callback);
@@ -173,15 +171,15 @@
 	};
 	
 	//строим по входящим данным
-	$.handler = applyBuild;
+	build.handler = applyBuild;
 	//постобработка
-	$['ready'] = ready;
-	$['getCurrentIteration'] = getCurrentIteration;
-	$['setCurrentIteration'] = setCurrentIteration;
-	$['setIteration'] = setIteration;
-	$['getIteration'] = getIteration;
+	build['ready'] = ready;
+	build['getCurrentIteration'] = getCurrentIteration;
+	build['setCurrentIteration'] = setCurrentIteration;
+	build['setIteration'] = setIteration;
+	build['getIteration'] = getIteration;
 	
-	window.blib.build = $;
+	window.blib.build = build;
 	
 })(); 
 
