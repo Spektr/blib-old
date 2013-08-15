@@ -89,9 +89,9 @@
 						temp = attr;
 					}
 					
-					if(result[key]){
+					if(key=="className"){
 						result[key] += " "+temp;
-					}else if(result.setAttribute && key!=="className"){
+					}else if(result.setAttribute){
 						result.setAttribute(key, temp);
 					}else{
 						result[key] = temp;
