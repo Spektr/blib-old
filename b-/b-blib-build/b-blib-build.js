@@ -178,8 +178,8 @@
 	build['setCurrentIteration'] = setCurrentIteration;
 	build['setIteration'] = setIteration;
 	build['getIteration'] = getIteration;
+	build['applyConstructor'] = applyConstructor;
 	
 	window.blib.build = build;
 	
-})(); 
-
+})();
