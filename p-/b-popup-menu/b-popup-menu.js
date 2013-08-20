@@ -34,6 +34,7 @@ $(document).ready(function(){
                     },
                     {
                         "block":"b-grid",
+						"attrs":{"style":"margin-left: 150px;"},
                         "content":[
                             {
                                 "elem":"cell",
@@ -68,6 +69,7 @@ $(document).ready(function(){
             },
             {
                 "elem":"panel",
+				"attrs":{"style":"margin-left: 150px;"},
                 "content":"здесь контент"
             },
             {
