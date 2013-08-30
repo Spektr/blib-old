@@ -49,10 +49,9 @@ window.blib =(function(){
 				return this;
 			};			
 			result.append = function(obj){
-				if(typeof(obj)=="object"){
-					for(var len = this.length, i=0; i<len; i++){
-						this[i].appendChild(obj);
-					}
+				if(typeof(obj)!="object")return this;
+				for(var len = this.length, i=0; i<len; i++){
+					this[i].appendChild(obj.cloneNode(true));
 				}
 				return this;
 			};
