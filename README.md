@@ -91,4 +91,13 @@
 		}
         </td>
     </tr>
+    <tr>
+        <td rowspan="2">blib.build.handler({server's request})</td>
+        <td>метод для обработки сериализованных данных взятых на клиентской стороне</td>
+    </tr>
+    <tr>
+        <td>
+	    	{server's request} - сериализованные данные
+        </td>
+    </tr>
 </table>
