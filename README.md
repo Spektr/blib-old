@@ -67,20 +67,37 @@
     </tr>
     <tr>
        <td>
-        {<br />
+        	{<br />
 		 script - грузить все скрипты или только прописанные в order,<br />
 		 exception - блоки которые надо игнорировать при сборке кеша,<br />
 		 order - порядок склейки блоков (jQuery раньше jQuery-ui)<br />
 		}
        </td>
     </tr>
+    <tr><th colspan="2">расширения</th></tr>
     <tr>
-        <td rowspan="2">processor()</td>
-        <td>(в разработке) для сборки дом дерева</td>
+        <td rowspan="2">blib.build({<br />'blockName'(string), <br />handle(function)}||<br />{<br />'get':{'x':n, 'y':n},<br /> 'post1':n,<br /> 'post2':n <br />...<br />})</td>
+        <td>метод для отправки запроса на сервер и сбора дом дерева на стороне клиента из ответа(ajax)</td>
     </tr>
     <tr>
         <td>
-            [особенности]
+	    	{<br />
+		 blockName(string) - идентификатор для сопоставления заранее загруженного обработчика,<br />
+		 handle(function) - собственно сам обработчик,<br />
+		}<br />
+		{<br />
+		 'get':{object} - обьект параметров передаваемых в запросе get-методом,<br />
+		 следующие параметры - передаются post-ом,<br />
+		}
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2">blib.build.handler({server's request})</td>
+        <td>метод для обработки сериализованных данных взятых на клиентской стороне</td>
+    </tr>
+    <tr>
+        <td>
+	    	{server's request} - сериализованные данные
         </td>
     </tr>
 </table>
