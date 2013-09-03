@@ -44,25 +44,24 @@
 			if(i>0)applyDeferredTask();			
 		},
 		/** сборка серверного ответа */
-		firstContainer = false,
 		currentBlock = "",
 		applyBuild = function(data, currentBlock){
 			if(!data){return false;}	//выходим если данных нет
 			
 			//если найден альтернативный застройщик юзаем его 0_0
 			if(data['block'] in constructors){
-				if(data['container'] && firstContainer){
+				if(data['container']){
 					deferredTask[data['container']]=data;
 					return false;
 				};
 				return applyConstructor(data['block'], data);
 			}
+			if(data['container'] && blib(data['container']).length)blib(data['container']).html("");
 			
 			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
 				answer = [],
 				result = document.createElement(data['tag']||"div");
 				
-			if(!firstContainer && data['container']){firstContainer=data['container'];}
 			if(data['block']){currentBlock=data['block'];}	//забиваем текущий блок
 			if(currentClass){result.className = currentClass};	//оформляем классом
 			//устанавливаем модификаторы
@@ -82,13 +81,10 @@
 						temp = JSON.stringify(attr);
 					}else if(type!="string"){
 						continue;
-					}else if(attr.substr(0, 8)=="function"){
-						result[key] = eval('('+attr+')');
-						continue;
 					}else{
 						temp = attr;
 					}
-					
+
 					if(key=="className"){
 						result[key] += " "+temp;
 					}else if(result.setAttribute){
@@ -116,10 +112,7 @@
 			//если есть контейнер то добавляем в него
 			if(blib(data['container']).length){
 				blib(data['container']).html("").append(result);
-				if(data['container'] == firstContainer){
-					applyDeferredTask();
-					firstContainer = false;
-				}
+				applyDeferredTask();
 			}else if(data['container']){
 				deferredTask[data['container']]=result;
 				return false;
@@ -178,8 +171,8 @@
 	build['setCurrentIteration'] = setCurrentIteration;
 	build['setIteration'] = setIteration;
 	build['getIteration'] = getIteration;
-	build['applyConstructor'] = applyConstructor;
 	
 	window.blib.build = build;
 	
-})();
+})(); 
+
