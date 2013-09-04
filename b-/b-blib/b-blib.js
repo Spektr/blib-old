@@ -40,8 +40,13 @@ window.blib =(function(){
 			result['length']=elements.length;
 			for(var len= result['length'], i=0; i<len; i++){
 				result[i]=elements[i];
-			}
-			
+			};
+			result.each=function(handler){
+				for(var len = this.length, i=0; i<len; i++){
+					handler.apply(this[i]);
+				}
+				return this;
+			};
 			result.html = function(obj){
 				if(typeof(obj)=="undefined")return this[0].innerHTML;
 				for(var len = this.length, i=0; i<len; i++){
