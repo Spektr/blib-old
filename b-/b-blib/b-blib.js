@@ -264,14 +264,11 @@ window.blib =(function(){
 			requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"&exception="+JSON.stringify([]);
 			requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
 			
-			console.log(requestData);
-			
 			$.ajax({
 				url:'b-/b-blib/b-blib.php',
 				data:requestData,
 				dataType: "json",
 				success: function(data){
-					console.log(data);
 					if(!data['status']){return false;}
 					version = data['version'];
 					if(storageFlag){localStorage.setItem("version", JSON.stringify(version));}
