@@ -97,7 +97,7 @@
     </tr>
     <tr>
         <td>
-	    	{server's request} - сериализованные данные
+	    	{server's request} - сериализованные данные.
         </td>
     </tr>
 </table>
