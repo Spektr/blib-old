@@ -28,6 +28,18 @@
         <th>описание</th>
     </tr>
     <tr>
+        <td rowspan="2">blib(selector)</td>
+        <td>выделение дом элемента (урезанный аналог $ jquery)</td>
+    </tr>
+    <tr>
+        <td>
+            selector - поиск по тегу<br />
+            #selector - поиск по идентификатору<br />
+            .selector - поиск по классу<br />
+            массив селекторов формируется из аргументов (selector, #selector, .selector)
+        </td>
+    </tr>
+    <tr>
         <td rowspan="2">blib.include(file [,target])</td>
         <td>основной метод подключения блока (css - сразу, шаблон - если есть, js - после загрузки дом дерева )</td>
     </tr>
