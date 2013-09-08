@@ -37,6 +37,27 @@
             #selector - поиск по идентификатору<br />
             .selector - поиск по классу<br />
             массив селекторов формируется из аргументов (selector, #selector, .selector)
+            возвращает объект
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2">
+        example = blib(selector)<br />
+        example.each(function)<br />
+        example.html(string)<br />
+        example.append(object)<br />
+        example.length<br />
+        example[number]<br />
+        </td>
+        <td>example - обьект с методами</td>
+    </tr>
+    <tr>
+        <td>
+            function - функция, применяемая к каждому элементу в обьекте<br />
+            string - текст для вставки в дом элемент, если нет аргументов возвращает то, что было<br />
+            object - добавляет дом элемент внутрь каждого<br />
+            length - сколько всего выделено элементов<br />
+            number - индексы элементов
         </td>
     </tr>
     <tr>
