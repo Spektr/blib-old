@@ -48,19 +48,22 @@
 		applyBuild = function(data, currentBlock){
 			if(!data){return false;}	//выходим если данных нет
 			
-			//если найден альтернативный застройщик юзаем его 0_0
-			if(data['block'] in constructors){
+			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
+				answer = [],
+				result = document.createElement(data['tag']||"div");
+			
+			//если найден альтернативный застройщик юзаем его
+			if(currentClass in constructors){
+				data['block']=currentClass;
 				if(data['container']){
 					deferredTask[data['container']]=data;
 					return false;
 				};
-				return applyConstructor(data['block'], data);
+				return applyConstructor(currentClass, data);
 			}
 			if(data['container'] && blib(data['container']).length)blib(data['container']).html("");
 			
-			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
-				answer = [],
-				result = document.createElement(data['tag']||"div");
+			
 				
 			if(data['block']){currentBlock=data['block'];}	//забиваем текущий блок
 			if(currentClass){result.className = currentClass};	//оформляем классом
@@ -79,7 +82,8 @@
 					
 					if(type=="object"){
 						temp = JSON.stringify(attr);
-					}else if(type!="string"){
+					}else if(type=="function"){
+						result[key]=attr;
 						continue;
 					}else{
 						temp = attr;
@@ -152,7 +156,7 @@
 		}
 
 		blib.ajax({
-			url:"b-/b-blib-build/b-blib-build.php"+get,
+			url:"processor.php"+get,
 			data:dataObject,
 			dataType: "json",
 			success: function(data){

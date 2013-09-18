@@ -4,6 +4,8 @@ window.blib =(function(){
 		head        = document.getElementsByTagName('head')[0],
 		js          = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{},
 		css         = {},
+		handlerNames = {'onclick':true, 'onmouseover':true, 'onmouseout':true, 'onfocus':true, 'onblur':true, 'onkeyup':true, 'onkeydown':true},
+		
 	/*jQuery simulate $() and $.ajax*/
 		$ = function(){
 			if(typeof(arguments) == "function"){return false;}
@@ -37,6 +39,19 @@ window.blib =(function(){
 				};
 			}
 			
+			var cloneNode = function(obj){
+				var temp = obj.cloneNode(false);
+				for(key in handlerNames){
+					if(key in obj){temp[key]=obj[key];};
+				}
+				if(obj.hasChildNodes()){
+					for(var len=obj.childNodes.length,i=0;i<len;i++){
+						temp.appendChild(cloneNode(obj.childNodes[i]));
+					}
+				}
+				return temp;
+			}
+			
 			result['length']=elements.length;
 			for(var len= result['length'], i=0; i<len; i++){
 				result[i]=elements[i];
@@ -56,8 +71,16 @@ window.blib =(function(){
 			};			
 			result.append = function(obj){
 				if(typeof(obj)!="object")return this;
-				for(var len = this.length, i=0; i<len; i++){
-					this[i].appendChild(obj.cloneNode(true));
+				var len = this.length;
+
+				/*
+				if(len==1){
+					this[0].appendChild(obj);
+					return this;
+				}
+				*/
+				for(i=0; i<len; i++){
+					this[i].appendChild(cloneNode(obj));
 				}
 				return this;
 			};
