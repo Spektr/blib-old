@@ -44,11 +44,16 @@ window.blib =(function(){
 				for(key in handlerNames){
 					if(key in obj){temp[key]=obj[key];};
 				}
+				
+				
+				
 				if(obj.hasChildNodes()){
-					for(var len=obj.childNodes.length,i=0;i<len;i++){
+					var len=obj.childNodes.length;
+					for(var i=0;i<len;i++){
 						temp.appendChild(cloneNode(obj.childNodes[i]));
 					}
 				}
+
 				return temp;
 			}
 			
@@ -70,17 +75,17 @@ window.blib =(function(){
 				return this;
 			};			
 			result.append = function(obj){
-				if(typeof(obj)!="object")return this;
+				if(typeof(obj)!="object"){return this;}
 				var len = this.length;
 
-				/*
 				if(len==1){
 					this[0].appendChild(obj);
 					return this;
 				}
-				*/
-				for(i=0; i<len; i++){
-					this[i].appendChild(cloneNode(obj));
+				
+				for(var i=0; i<len; i++){
+					var temp =cloneNode(obj);
+					this[i].appendChild(temp);
 				}
 				return this;
 			};

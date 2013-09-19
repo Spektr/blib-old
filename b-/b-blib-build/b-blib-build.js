@@ -33,21 +33,21 @@
 		/** применение отложенных заданий*/
 		deferredTask = {},
 		applyDeferredTask = function(){
-			var i=0, temp;
+			var set=false, temp;
+
 			for(key in deferredTask){
 				if(!blib(key).length){continue;}
-				i++;
-				temp = (deferredTask[key].block)?applyConstructor(deferredTask[key].block, deferredTask[key]):deferredTask[key];
-				if(temp){blib(key).html("").append(temp);}
+				set=true;
+				temp = (deferredTask[key].block)?applyConstructor(deferredTask[key].block, deferredTask[key]):deferredTask[key]; /* 0_0 риск зацикливания если в отложенных есть неправильная функция*/
 				delete deferredTask[key];
+				if(temp){blib(key).html("").append(temp);}
 			}
-			if(i>0)applyDeferredTask();			
+			if(set){applyDeferredTask()};			
 		},
 		/** сборка серверного ответа */
 		currentBlock = "",
 		applyBuild = function(data, currentBlock){
-			if(!data){return false;}	//выходим если данных нет
-			
+			if(!data){return false;}
 			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
 				answer = [],
 				result = document.createElement(data['tag']||"div");
@@ -61,7 +61,7 @@
 				};
 				return applyConstructor(currentClass, data);
 			}
-			if(data['container'] && blib(data['container']).length)blib(data['container']).html("");
+			if(data['container'] && blib(data['container']).length){blib(data['container']).html("");}
 			
 			
 				
@@ -113,6 +113,7 @@
 			for(i in answer){if(typeof(answer[i])=="object"){result.appendChild(answer[i]);}else if(answer[i]){ result.innerHTML+=answer[i];}};
 			
 			
+			
 			//если есть контейнер то добавляем в него
 			if(blib(data['container']).length){
 				blib(data['container']).html("").append(result);
@@ -156,7 +157,7 @@
 		}
 
 		blib.ajax({
-			url:"processor.php"+get,
+			url:"b-/b-blib-build/b-blib-build.php"+get,
 			data:dataObject,
 			dataType: "json",
 			success: function(data){
