@@ -33,25 +33,36 @@
 		/** применение отложенных заданий*/
 		deferredTask = {},
 		applyDeferredTask = function(){
-			var set=false, temp;
-
+			var set=false;
 			for(key in deferredTask){
 				if(!blib(key).length){continue;}
 				set=true;
-				temp = (deferredTask[key].block)?applyConstructor(deferredTask[key].block, deferredTask[key]):deferredTask[key]; /* 0_0 риск зацикливания если в отложенных есть неправильная функция*/
+				var tObj = deferredTask[key]['block'],
+					tKey = key,
+					tData = (tObj)?JSON.parse(JSON.stringify(deferredTask[key])):deferredTask[key], /* 0_0 риск удалить дом элемент*/
+					temp;
+					
 				delete deferredTask[key];
+				temp = (tObj)?applyConstructor(tData.block, tData):tData; 
 				if(temp){blib(key).html("").append(temp);}
 			}
-			if(set){applyDeferredTask()};			
+			if(set){applyDeferredTask()};
+			deferredTask={};
 		},
 		/** сборка серверного ответа */
-		currentBlock = "",
 		applyBuild = function(data, currentBlock){
 			if(!data){return false;}
-			var currentClass = (function(){if(data['block']){return data['block'];}else if(data['elem']){return (currentBlock+"__"+data['elem']);}else{return false;}})(),
-				answer = [],
-				result = document.createElement(data['tag']||"div");
 			
+			
+			//[первый в ответе, текущий блок, имя обьекта, ДОМ-результат, есть ли контейнер]
+			var parent = (!currentBlock)?true:false,
+				currentBlock = (data['block'])?data['block']:(currentBlock?currentBlock:"noname"),
+				currentClass = (data['block'])?data['block']:((data['elem'])?(currentBlock+"__"+data['elem']):false),
+				result = document.createElement(data['tag']||"div"),
+				container = (data['container'])?(blib(data['container']).length>0):false;
+			
+			
+
 			//если найден альтернативный застройщик юзаем его
 			if(currentClass in constructors){
 				data['block']=currentClass;
@@ -61,12 +72,11 @@
 				};
 				return applyConstructor(currentClass, data);
 			}
-			if(data['container'] && blib(data['container']).length){blib(data['container']).html("");}
-			
-			
+			//чистим контейнер, т.к. если это не альтернативный обработчик, нужно почистить
+			if(container){blib(data['container']).html("");}
 				
-			if(data['block']){currentBlock=data['block'];}	//забиваем текущий блок
-			if(currentClass){result.className = currentClass};	//оформляем классом
+			//оформляем классом
+			if(currentClass){result.className = currentClass};
 			//устанавливаем модификаторы
 			if(currentClass && data['mods']){
 				for(key in data['mods']){
@@ -76,17 +86,19 @@
 			//задаем атрибуты
 			if(data['attrs']){
 				for(key in data['attrs']){
-					var attr = data['attrs'][key],
-						type = typeof(attr),
-						temp;
+					var attr = data['attrs'][key], temp;
 					
-					if(type=="object"){
-						temp = JSON.stringify(attr);
-					}else if(type=="function"){
-						result[key]=attr;
-						continue;
-					}else{
-						temp = attr;
+					switch(typeof(attr)){
+						case "object":
+							temp = JSON.stringify(attr);
+						break;
+						case "function":
+							result[key]=attr;
+							continue;
+						break;
+						default:
+							temp = attr;
+						break;
 					}
 
 					if(key=="className"){
@@ -96,36 +108,42 @@
 					}else{
 						result[key] = temp;
 					}
-
 				}
 			}
+			
 			//проверяем есть ли вложенность и рекурсивно обрабатываем если есть
 			switch(typeof(data['content'])){
 				case "object":
-					for(key in data['content']){answer.push(applyBuild(data['content'][key],currentBlock));}
+					for(key in data['content']){
+						var temp = applyBuild(data['content'][key],currentBlock);
+						if(!temp)continue;
+						if(typeof(temp)=="object"){result.appendChild(temp);}else{result.innerHTML+=temp;}
+					}
 				break;
 				case "string":
-					answer.push(data['content']);
+					result.innerHTML+=data['content'];
 				break;
 			}
 			
-			//заполняем текущий элемент вложенными в него
-			for(i in answer){if(typeof(answer[i])=="object"){result.appendChild(answer[i]);}else if(answer[i]){ result.innerHTML+=answer[i];}};
 			
 			
-			
+
 			//если есть контейнер то добавляем в него
-			if(blib(data['container']).length){
+			if(container){
 				blib(data['container']).html("").append(result);
 				applyDeferredTask();
 			}else if(data['container']){
 				deferredTask[data['container']]=result;
 				return false;
 			}else{
+				if(parent && !data['container']){applyDeferredTask();}
 				return result;
 			}
 			
+	
+			
 		},
+		
 		/** колбаки после получения ответа и перестройки дерева */
 		readyFunctions = [];
 		ready = function(obj){
