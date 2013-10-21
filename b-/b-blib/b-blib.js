@@ -2,22 +2,76 @@ window.blib =(function(){
 	var storageFlag = ('localStorage' in window && window['localStorage'] !== null)?true:false,
 		version     = (storageFlag && localStorage.getItem('version'))?localStorage.getItem('version'):1,
 		head        = document.getElementsByTagName('head')[0],
-		js          = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{},
+		js          = {},
 		css         = {},
 		handlerNames = {'onclick':true, 'onmouseover':true, 'onmouseout':true, 'onfocus':true, 'onblur':true, 'onkeyup':true, 'onkeydown':true},
 		
-	/*jQuery simulate $() and $.ajax*/
-		$ = function(){
-			if(typeof(arguments) == "function"){return false;}
+		/** clone DOM element */
+		clone = function(obj){
+			var temp = obj.cloneNode(false);
+			for(key in handlerNames){
+				if(key in obj){temp[key]=obj[key];};
+			}
 			
+			if(obj.hasChildNodes()){
+				var len=obj.childNodes.length;
+				for(var i=0;i<len;i++){
+					temp.appendChild(clone(obj.childNodes[i]));
+				}
+			}
+			return temp;
+		},
+		
+		/** DOM ready method */
+		ready=function(handler){
+			var called = false;
+			function onReady(){
+				if(called){return false;}
+				called = true;
+				handler();
+			}
+		
+			if( document.addEventListener ){
+				document.addEventListener( "DOMContentLoaded", function(){onReady();}, false );
+			}else if( document.attachEvent ){
+				if( document.documentElement.doScroll && window == window.top ){
+					function tryScroll(){
+						if(called){return false;}
+						if(!document.body){return false;}
+						try{
+							document.documentElement.doScroll("left");
+							onReady();
+						} catch(e) {
+							setTimeout(tryScroll, 0);
+						}
+					}
+					tryScroll();
+				}
+		
+				document.attachEvent("onreadystatechange", function(){		
+					if(document.readyState === "complete"){
+						onReady();
+					}
+				})
+			}
+			if (window.addEventListener){
+				window.addEventListener('load', onReady, false)
+			}else if (window.attachEvent){
+				window.attachEvent('onload', onReady)
+			}else{
+				window.onload=onReady
+			}
+		},
+		
+		/** get element by selector */
+		getElement = function(selector){	
 			var els = document.getElementsByTagName('*'),
 				elsLen=els.length,
-				elements=[],
-				result = {};
+				elements=[];
 			
-			for(var len=arguments.length, i=0; i<len; i++){
-				if(typeof(arguments[i])!='string'){continue;}
-				var element=arguments[i],
+			for(var len=selector.length, i=0; i<len; i++){
+				if(typeof(selector[i])!='string'){continue;}
+				var element=selector[i],
 					point = element.substr(0,1),
 					pattern = element.substr(1);
 			
@@ -39,28 +93,83 @@ window.blib =(function(){
 				};
 			}
 			
-			var cloneNode = function(obj){
-				var temp = obj.cloneNode(false);
-				for(key in handlerNames){
-					if(key in obj){temp[key]=obj[key];};
+			return elements;
+		},
+		
+		/** ajax */
+		ajaxDefault={
+			'dataType':"text",
+			'success':function(){},
+			'data':null,
+			'type':"POST",
+			'url':"/",
+			'headers':["X-Requested-With","XMLHttpRequest"]
+			
+		},
+		ajax = function(dataObject) {
+			var xhr;
+			if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
+			else if (window.ActiveXObject) {
+				try {
+					xhr = new ActiveXObject('Msxml2.XMLHTTP');
+				} catch (e){}
+				try {
+					xhr = new ActiveXObject('Microsoft.XMLHTTP');
+				} catch (e){}
+			}
+			if (!xhr) {return alert("Браузер не поддерживает AJAX");}
+			
+			for(key in ajaxDefault){
+				if(!(key in dataObject)){
+					dataObject[key]=ajaxDefault[key];
 				}
-				
-				
-				
-				if(obj.hasChildNodes()){
-					var len=obj.childNodes.length;
-					for(var i=0;i<len;i++){
-						temp.appendChild(cloneNode(obj.childNodes[i]));
-					}
-				}
+			}
 
-				return temp;
+			xhr.onreadystatechange = function(){
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					var rData = (dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
+					dataObject['success'](rData);
+				}
 			}
 			
-			result['length']=elements.length;
-			for(var len= result['length'], i=0; i<len; i++){
-				result[i]=elements[i];
-			};
+			if(typeof(dataObject['data'])=="object" && dataObject['type']!="DATA"){
+				var temp = "";
+				for(key in dataObject['data']){
+					temp+=key+"="+dataObject['data'][key]+"&";
+				}
+				dataObject['data'] = temp.substr(0, temp.length-1);
+			}
+			
+			switch(dataObject['type']){
+				case "GET":
+					dataObject['headers']=["Content-Type", "text/html"];
+					dataObject['url']=(dataObject['url'].indexOf("?")!=-1?"&":"?")+dataObject['data'];
+					dataObject['data']=null;
+				break;
+				
+				case "POST":
+					dataObject['headers']=["Content-Type", "application/x-www-form-urlencoded"];
+				break;
+				
+				case "DATA":
+					dataObject['headers']=["Content-Type", "application/json"];
+					dataObject['data']=JSON.stringify(dataObject['data']);
+					dataObject['type']="POST";
+				break;
+				
+			}
+
+			xhr.open(dataObject['type'], dataObject['url'], true);
+			xhr.setRequestHeader(dataObject['headers'][0],dataObject['headers'][1]);
+			xhr.send(dataObject['data']);
+			
+		},
+		$ = function(){
+			if(!arguments.length){return false;}
+			if(typeof(arguments[0].caller) === "object"){return ready(arguments[0]);}
+			
+			var result = getElement(arguments);
+	
 			result.each=function(handler){
 				for(var len = this.length, i=0; i<len; i++){
 					handler.apply(this[i]);
@@ -77,63 +186,22 @@ window.blib =(function(){
 			result.append = function(obj){
 				if(typeof(obj)!="object"){return this;}
 				var len = this.length;
-
+	
 				if(len==1){
 					this[0].appendChild(obj);
 					return this;
 				}
 				
 				for(var i=0; i<len; i++){
-					var temp =cloneNode(obj);
+					var temp =clone(obj);
 					this[i].appendChild(temp);
 				}
 				return this;
 			};
-			return result;
 		
-		},
-		ajax = function(dataObject) {
-			var xhr;
-			if (window.XMLHttpRequest) xhr = new XMLHttpRequest();
-			else if (window.ActiveXObject) {
-				try {
-					xhr = new ActiveXObject('Msxml2.XMLHTTP');
-				} catch (e){}
-				try {
-					xhr = new ActiveXObject('Microsoft.XMLHTTP');
-				} catch (e){}
-			}
-	
-			if (xhr) {
-				xhr.onreadystatechange = function(){
-					if (xhr.readyState === 4 && xhr.status === 200) {
-						var rData = (dataObject['dataType'] && dataObject['dataType']=="json")?JSON.parse(xhr.responseText):xhr.responseText;
-						dataObject['success'](rData);
-					}
-				}
-				
-				if(typeof(dataObject['data'])=="object"){
-					var temp = "";
-					for(key in dataObject['data']){
-						temp+=key+"="+dataObject['data'][key]+"&";
-					}
-					dataObject['data'] = temp.substr(0, temp.length-1);
-				}
-				
-				if(dataObject['type']!="GET" && dataObject['dataType']!="html"){
-					xhr.open("POST", dataObject['url'], true);
-					xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-					xhr.send(dataObject['data']);
-				}else{
-					xhr.open("GET", dataObject['url']+(dataObject['url'].indexOf("?")!=-1?"&":"?")+dataObject['data'], true);
-					xhr.setRequestHeader("Content-Type", "text/html");
-					xhr.send(null);
-				}
-			} else {
-				alert("Браузер не поддерживает AJAX");
-			}
+			return result;
 		};
-	$['ajax'] = ajax;
+	$['ajax']=ajax;
 	/*jQuery simulate $() and $.ajax*/
 	
 	
@@ -277,7 +345,7 @@ window.blib =(function(){
 	* {srting}[]order				first turn load sctipts/if 'script' is false, then 'order' set chosen blocks
 	*/
 	loadFunction = function(dataObject){
-		document.addEventListener("DOMContentLoaded", function(){
+		ready(function(){
 			/** get files which we have */
 			if(storageFlag){
 				var arr = JSON.parse(localStorage.getItem('css'));
@@ -287,14 +355,19 @@ window.blib =(function(){
 				var allJs =  (arr)?getFiles(arr):[];
 			}
 			
-
-			var requestData = "data="+JSON.stringify((dataObject['script']?{'css':allCss, 'js':allJs}:{'css':allCss, 'js':"orderOnly"}));
-			requestData += (dataObject['exception'])?"&exception="+JSON.stringify(dataObject['exception']):"&exception="+JSON.stringify([]);
-			requestData += (dataObject['order'])?"&order="+JSON.stringify(dataObject['order']):"&order="+JSON.stringify(["b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"]);
-			
+			var requestData = {
+				'data':{
+					'css':allCss,
+					'js':(dataObject['script']?allJs:"orderOnly")
+				},
+				'exception':(dataObject['exception'] || []),
+				'order':(dataObject['order'] ||["b-/b-blib-build/b-blib-build.js", "b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"])
+			};
+						
 			$.ajax({
 				url:'b-/b-blib/b-blib.php',
 				data:requestData,
+				type:"DATA",
 				dataType: "json",
 				success: function(data){
 					if(!data['status']){return false;}
@@ -305,7 +378,7 @@ window.blib =(function(){
 				}
 			});
 			
-		}, false );//DOMContentLoaded
+		});//ready
 	};
 	/** blib functions */
 	
@@ -314,16 +387,24 @@ window.blib =(function(){
 	/** first include all css from cache */
 	var arr = (storageFlag && localStorage.getItem('css'))?JSON.parse(localStorage.getItem('css')):{};
 	for(key in arr){
+		if(arr[key]['version']!=version){delete arr[key]; continue;}
 		cssFunction(key, arr[key]['list']||[]);
 	}
+	var arr = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{};
+	for(key in arr){
+		if(arr[key]['version']!=version){delete arr[key]; continue;}
+		jsFunction(key, arr[key]['list']||[]);
+	}
 	
-	if(storageFlag){window.localStorage.clear();} //0_0 for clear old change b-blib
+	//if(storageFlag){window.localStorage.clear();} //0_0 for clear old change b-blib
 /** prehandling */
 	
 	$['css']=cssFunction;
 	$['js']=jsFunction;
 	$['include']=includeFunction;
 	$['vanishLoad']=loadFunction;
+	$['clone']=clone;
+	$['ready']=ready;
 	
 	/** public object */
 	return $;

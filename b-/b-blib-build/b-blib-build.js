@@ -164,7 +164,9 @@
 		}
 		
 		var startDataObject=JSON.parse(JSON.stringify(dataObject)),
-			get = "";
+			get = "",
+			ajaxType="POST";
+			
 		if(dataObject['get']){
 			get ="?";
 			for(key in dataObject['get']){
@@ -173,17 +175,25 @@
 			get = get.substr(0, get.length-1);
 			delete dataObject['get'];
 		}
-
+		
+		if(dataObject['data']){
+			dataObject=dataObject['data'];
+			ajaxType="DATA";
+		}
+		
+		
 		blib.ajax({
 			url:"b-/b-blib-build/b-blib-build.php"+get,
+			type:ajaxType,
 			data:dataObject,
 			dataType: "json",
 			success: function(data){
-                setIteration(startDataObject, data);
+				setIteration(startDataObject, data);
 				applyBuild(data);
 				ready(data);
 			}
 		});
+		
 	};
 	
 	//строим по входящим данным

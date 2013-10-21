@@ -1,5 +1,6 @@
 <?php 
-getCache(json_decode($_REQUEST['data']), json_decode($_REQUEST['exception']), json_decode($_REQUEST['order']));
+$data = json_decode(file_get_contents("php://input"),true);
+getCache($data['data'], $data['exception'], $data['order']);
 
 /*
 //выплевываем кэш по запросу от клиента
