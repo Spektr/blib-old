@@ -109,7 +109,7 @@
     </tr>
     <tr><th colspan="2">расширения</th></tr>
     <tr>
-        <td rowspan="2">blib.build({<br />'blockName'(string), <br />handle(function)}||<br />{<br />'get':{'x':n, 'y':n},<br /> 'post1':n,<br /> 'post2':n <br />...<br />})</td>
+        <td rowspan="2">blib.build({<br />'blockName'(string), <br />handle(function)}||<br />{<br />'get':{'x':n, 'y':n},<br /> 'data':{'x':n, 'y':n},<br /> 'post1':n,<br /> 'post2':n <br />...<br />})</td>
         <td>метод для отправки запроса на сервер и сбора дом дерева на стороне клиента из ответа(ajax)</td>
     </tr>
     <tr>
@@ -121,6 +121,7 @@
 		{<br />
 		 'get':{object} - обьект параметров передаваемых в запросе get-методом,<br />
 		 следующие параметры - передаются post-ом,<br />
+		 кроме data - передаются post-ом сам обьект без идентификатора (чистые данные)<br />
 		}
         </td>
     </tr>
