@@ -55,11 +55,11 @@ window.blib =(function(){
 				})
 			}
 			if (window.addEventListener){
-				window.addEventListener('load', onReady, false)
+				window.addEventListener('load', onReady, false);
 			}else if (window.attachEvent){
-				window.attachEvent('onload', onReady)
+				window.attachEvent('onload', onReady);
 			}else{
-				window.onload=onReady
+				window.onload=onReady;
 			}
 		},
 		
@@ -203,25 +203,48 @@ window.blib =(function(){
 		};
 	$['ajax']=ajax;
 	/*jQuery simulate $() and $.ajax*/
-	
-	
-	/** blib functions */
+
 	/**
-	* get all files in cache
-	* @param {object} obj		cache css or js
-	* @return {string}[]		array of all include files
+	* work with storage(localStorage + object + html) set files
+	* [param]{'operation':, 'type':, 'fileName':, 'fileCache':, 'file':}
 	*/
-	var getFiles = function(obj){
-		var arr=[];
-		for(key in obj){
-			if(obj[key]['list']){
-				arr = arr.concat(obj[key]['list']);
-			}else{
-				arr.push(key);
+	var storageHandler = function(data){
+		var operation = data['operation'],
+			type = data['type'],
+			fileName = data['fileName'],
+			fileCache = data['fileCache']||[],
+			file = data['file'],
+			obj = eval(type),
+			html = document.getElementById(fileName);
+		
+		if(operation=='clear'){
+			if(html){html.parentNode.removeChild(html);}
+			delete obj[fileName];			
+		}else if(operation=='set'){
+			if(!head.appendChild(file)){return alert("непрошло"+fileName);}
+			obj[fileName]={'version':version, 'list':fileCache};
+		}else if(operation=='getAllFiles'){
+			var arr=[];
+			for(key in obj){
+				if(obj[key]['list']){
+					arr = arr.concat(obj[key]['list']);
+				}else{
+					arr.push(key);
+				}
 			}
+			arr.sort();
+			var i = arr.length;
+			while (i--) {
+				if (arr[i] == arr[i-1]){
+					arr.splice(i, 1);
+				}
+			}
+			return arr;
 		}
-		return arr;
+		
+		if(storageFlag){localStorage.setItem(type, JSON.stringify(obj));}
 	},
+	
 	
 	/**
 	* include css file
@@ -232,41 +255,24 @@ window.blib =(function(){
 	cssFunction = function(cssFile, inCache){
 		cssFile = cssFile.toString();
 	
-		if((cssFile in css) && (css[cssFile]['version']==version)){
-			return this;
-		}else{
-			for(key in css){
-				var innerFiles = (css[key]['list'])?css[key]['list']:[];
-				for(var i=0, len=innerFiles.length;i<len;i++){
-					if(innerFiles[i]==cssFile){return cssFunction(key, innerFiles);}
-				}
-			}
-
-			delete css[cssFile];
-			var addededStyle = document.getElementById(cssFile);
-			if(addededStyle){						
-				addededStyle.parentNode.removeChild(addededStyle);
-			}
-			
-		}
-
-		var link  = document.createElement('link');
-		link.rel  = 'stylesheet';
-		link.type = 'text/css';
-		link.href = cssFile+"?new="+version;
-		link.media = 'all';
-		link.id = cssFile;
-		if(head.appendChild(link)){
-			css[cssFile]={};
-			css[cssFile]['version']=version;
-			if(inCache && inCache.length){
-				css[cssFile]['list']=inCache;
-			}
-
-			if(storageFlag){
-				localStorage.setItem("css", JSON.stringify(css));
+		if((cssFile in css) && (css[cssFile]['version']==version)){ return this; }
+	
+		for(key in css){
+			var innerFiles = (css[key]['list'])?css[key]['list']:[];
+			for(var len=innerFiles.length, i=0;i<len;i++){
+				if(innerFiles[i]==cssFile){return cssFunction(key, innerFiles);}
 			}
 		}
+		
+		storageHandler({'operation':'clear', 'type':'css', 'fileName':cssFile});
+		var cssLink  = document.createElement('link');
+		cssLink.rel  = 'stylesheet';
+		cssLink.type = 'text/css';
+		cssLink.href = cssFile+"?new="+version;
+		cssLink.media = 'all';
+		cssLink.id = cssFile;
+		storageHandler({'operation':'set', 'type':'css', 'fileName':cssFile, 'fileCache':inCache, 'file':cssLink});
+		
 		return this;
 	},
 	
@@ -279,13 +285,7 @@ window.blib =(function(){
 	jsFunction = function(jsFile, inCache){
 		jsFile = jsFile.toString();
 
-		if(jsFile in js){
-			delete js[jsFile];
-			var addededScript = document.getElementById(jsFile);
-			if(addededScript){						
-				addededScript.parentNode.removeChild(addededScript);
-			}
-		}else{
+		if(!(jsFile in js)){
 			for(key in js){
 				var innerFiles = (js[key]['list'])?js[key]['list']:[];
 				for(var i=0, len=innerFiles.length;i<len;i++){
@@ -293,22 +293,13 @@ window.blib =(function(){
 				}
 			}
 		}
-
-		var script  = document.createElement('script');
-		script.id = jsFile;
-		script.src = jsFile+"?new="+version;
-		script.type="text/javascript";
-		if(head.appendChild(script)){
-			js[jsFile]={};
-			js[jsFile]['version']=version;
-			if(inCache && inCache.length){
-				js[jsFile]['list']=inCache;
-			}
-
-			if(storageFlag){
-				localStorage.setItem("js", JSON.stringify(js));
-			}
-		}
+		
+		storageHandler({'operation':'clear', 'type':'js', 'fileName':jsFile});
+		var scriptLink  = document.createElement('script');
+		scriptLink.id = jsFile;
+		scriptLink.src = jsFile+"?new="+version;
+		scriptLink.type="text/javascript";
+		storageHandler({'operation':'set', 'type':'js', 'fileName':jsFile, 'fileCache':inCache, 'file':scriptLink});
 		return this;
 	},
 	
@@ -345,25 +336,33 @@ window.blib =(function(){
 	* {srting}[]order				first turn load sctipts/if 'script' is false, then 'order' set chosen blocks
 	*/
 	loadFunction = function(dataObject){
-		ready(function(){
-			/** get files which we have */
-			if(storageFlag){
-				var arr = JSON.parse(localStorage.getItem('css'));
-				var allCss = (arr)?getFiles(arr):[];
-
-				var arr = JSON.parse(localStorage.getItem('js'));
-				var allJs =  (arr)?getFiles(arr):[];
+		
+		if(!dataObject['order'] || dataObject['script']){
+			/** first include all cache */
+			var arr = (storageFlag && localStorage.getItem('css'))?JSON.parse(localStorage.getItem('css')):{};
+			for(key in arr){
+				cssFunction(key, arr[key]['list']||[]);
 			}
-			
-			var requestData = {
+			var arr = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{};
+			for(key in arr){
+				jsFunction(key, arr[key]['list']||[]);
+			}
+		}
+		
+		/** get files which we have */
+		var allCss = storageHandler({'operation':'getAllFiles', 'type':'css'}),
+			allJs = storageHandler({'operation':'getAllFiles', 'type':'js'}),
+			requestData = {
+				'version':version,
 				'data':{
 					'css':allCss,
 					'js':(dataObject['script']?allJs:"orderOnly")
 				},
 				'exception':(dataObject['exception'] || []),
 				'order':(dataObject['order'] ||["b-/b-blib-build/b-blib-build.js", "b-/b-jquery/b-jquery.js", "b-/b-jquery-ui/b-jquery-ui.js"])
-			};
-						
+			};	
+
+		ready(function(){
 			$.ajax({
 				url:'b-/b-blib/b-blib.php',
 				data:requestData,
@@ -371,33 +370,17 @@ window.blib =(function(){
 				dataType: "json",
 				success: function(data){
 					if(!data['status']){return false;}
+					console.log(requestData);
+					console.log(data);
 					version = data['version'];
 					if(storageFlag){localStorage.setItem("version", JSON.stringify(version));}
 					if(data['css']){cssFunction(data['css']['name'], data['css']['list']);}
 					if(data['js']){jsFunction(data['js']['name'], data['js']['list']);}
 				}
 			});
-			
 		});//ready
 	};
 	/** blib functions */
-	
-	
-/** prehandling */
-	/** first include all css from cache */
-	var arr = (storageFlag && localStorage.getItem('css'))?JSON.parse(localStorage.getItem('css')):{};
-	for(key in arr){
-		if(arr[key]['version']!=version){delete arr[key]; continue;}
-		cssFunction(key, arr[key]['list']||[]);
-	}
-	var arr = (storageFlag && localStorage.getItem('js'))?JSON.parse(localStorage.getItem('js')):{};
-	for(key in arr){
-		if(arr[key]['version']!=version){delete arr[key]; continue;}
-		jsFunction(key, arr[key]['list']||[]);
-	}
-	
-	//if(storageFlag){window.localStorage.clear();} //0_0 for clear old change b-blib
-/** prehandling */
 	
 	$['css']=cssFunction;
 	$['js']=jsFunction;

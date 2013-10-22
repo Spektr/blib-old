@@ -1,6 +1,23 @@
 <?php 
 $data = json_decode(file_get_contents("php://input"),true);
-getCache($data['data'], $data['exception'], $data['order']);
+getCache( actualizeData($data['data'],$data['version']), $data['exception'], $data['order'] );
+
+
+
+/**
+ * обработка данных согласно текущей версии
+ * если версии разные, то очищает список переданных файлов
+*/
+function actualizeData($types, $version){
+	$curentVersion = (file_exists("__cache/b-cache.ini")?filemtime("__cache/b-cache.ini"):0);
+	$actual = ($version == $curentVersion);
+	$temp=$types;
+	foreach($types as $key => $value){
+		if($value=="orderOnly"){continue;}
+		if(!$actual){$temp[$key]=array();}
+	}
+	return $temp;
+}
 
 /*
 //выплевываем кэш по запросу от клиента
