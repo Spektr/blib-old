@@ -21,11 +21,13 @@
             currentIteration = num;
         },
         setIteration = function(request, answer){		//установка итерации (запроса+ответа)
-            iterations[++currentIteration]={'request':request, 'answer':answer};
+            if(typeof(request)!='object'){return (iterations[request]=answer);}
+			iterations[++currentIteration]={'request':request, 'answer':answer};
 			iterations.splice(currentIteration+1, iterations.length-currentIteration);
         },
         getIteration = function(index){					//получение итерации
-            if(index in iterations){
+			if(typeof(index)=='undefined'){return iterations;}
+			if(index in iterations){
                 return iterations[index];
             }
 			return false;
@@ -68,7 +70,7 @@
 				data['block']=currentClass;
 				if(data['container']){
 					deferredTask[data['container']]=data;
-					return false;
+					return (parent)?applyDeferredTask():false;
 				};
 				return applyConstructor(currentClass, data);
 			}

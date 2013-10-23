@@ -25,12 +25,16 @@ window.blib =(function(){
 		/** DOM ready method */
 		ready=function(handler){
 			var called = false;
+
 			function onReady(){
 				if(called){return false;}
 				called = true;
+				console.log(handler);
 				handler();
 			}
-		
+			
+			if(document.readyState=="complete"){return handler()}; //can use rotate window.onload for crosbrowser
+			
 			if( document.addEventListener ){
 				document.addEventListener( "DOMContentLoaded", function(){onReady();}, false );
 			}else if( document.attachEvent ){
@@ -166,7 +170,7 @@ window.blib =(function(){
 		},
 		$ = function(){
 			if(!arguments.length){return false;}
-			if(typeof(arguments[0].caller) === "object"){return ready(arguments[0]);}
+			if(typeof(arguments[0]) === "function"){return ready(arguments[0]);}
 			
 			var result = getElement(arguments);
 	
@@ -336,8 +340,7 @@ window.blib =(function(){
 	* {srting}[]order				first turn load sctipts/if 'script' is false, then 'order' set chosen blocks
 	*/
 	loadFunction = function(dataObject){
-		
-		if(!dataObject['order'] || dataObject['script']){
+		if(!dataObject['order'].length || dataObject['script']){
 			/** first include all cache */
 			var arr = (storageFlag && localStorage.getItem('css'))?JSON.parse(localStorage.getItem('css')):{};
 			for(key in arr){
