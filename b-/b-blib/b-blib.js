@@ -29,7 +29,6 @@ window.blib =(function(){
 			function onReady(){
 				if(called){return false;}
 				called = true;
-				console.log(handler);
 				handler();
 			}
 			
@@ -373,8 +372,6 @@ window.blib =(function(){
 				dataType: "json",
 				success: function(data){
 					if(!data['status']){return false;}
-					console.log(requestData);
-					console.log(data);
 					version = data['version'];
 					if(storageFlag){localStorage.setItem("version", JSON.stringify(version));}
 					if(data['css']){cssFunction(data['css']['name'], data['css']['list']);}
