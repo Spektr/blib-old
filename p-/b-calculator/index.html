@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv = "cache-control" content = "max-age=0">
+<meta http-equiv = "cache-control" content = "no-cache">
+<meta http-equiv = "expires" content = "0">
+<meta http-equiv = "expires" content = "Tue, 01 Jan 1970 1:00:00 GMT">
+<meta http-equiv = "pragma" content = "no-cache">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="index.js"></script>
+<link rel="stylesheet" type="text/css" href="index.css">
+<title>Untitled Document</title>
+</head>
+<body>
+
+<form action="#" class="b-calculator">
+	<div class="b-calculator__header">
+		<div class="b-calculator__type">Тип окна</div>
+		<div class="b-calculator__item" alt="1">название</div>
+		<div class="b-calculator__item" alt="2">название</div>
+		<div class="b-calculator__item" alt="3">название</div>
+		<div class="b-calculator__item" alt="4">название</div>
+		<div class="b-calculator__item" alt="5">название</div>
+	</div>
+	<div class="b-calculator__content">
+		<div class="b-calculator__properties">
+			<br/>
+			Высота (в см.)
+			<input type="text" name="height" class="b-calculator__input-height" />
+			Ширина (в см.)
+			<input type="text" name="width" class="b-calculator__input-width" />
+			<!--
+				настройки для типов окон задаются в скрипте,
+				а сами параметы ниже:
+				<select name="fixator" - имя надстройки
+				<option value="+20" - означает к результату (+)(20) прибавить 20 рублей
+				ВАЖНО: скидки наценки уценки надбавки (все коэффициентные значения) применяются в порядке следования тоесть надстройки с ними должны идти последними
+			-->
+			<select name="fixator" class="b-calculator__input-param">
+				<option disabled="disabled" selected="selected">крепеж</option>
+				<option value="+20">нормальный (+20 рублей)</option>
+				<option value="-30">неочень (-30 рублей)</option>
+				<option value="*3">отличный (в три раза дороже)</option>
+				<option value="/2">плохой (в два раза дешевле)</option>
+				<option value="*1.2">надбавка (20%)</option>
+				<option value="*0.8">скидка (20%)</option>
+			</select>
+			
+			<select name="coeff" class="b-calculator__input-param">
+				<option disabled="disabled" selected="selected">коэффициент</option>
+				<option value="*20">20</option>
+				<option value="*30">30</option>
+				<option value="/40">40</option>
+				<option value="*50">50</option>
+			</select>
+		</div>
+		<div class="b-calculator__view"></div>
+	</div>
+	<div class="b-calculator__footer"></div>
+</form>
+
+
+
+
+</body>
+</html>
