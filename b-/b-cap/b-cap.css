@@ -1,0 +1,64 @@
+.b-cap{
+	position: relative;
+	width: 700px;
+	margin: 10% auto;
+	padding-right: 170px;
+	padding-bottom: 10px;
+	border: 4px solid rgb(213, 213, 213);
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	color: rgb(146, 146, 146);
+	background: white;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	box-shadow: 10px 10px 0px rgb(95, 95, 95);
+}
+.b-cap__puh{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+.b-cap__puh-message{
+	display:none;
+	position: absolute;
+	width: 200px;
+	font-size: 12px;
+	color: black;
+	background: white;
+	border: 1px solid rgb(121, 121, 121);
+	padding: 2px;
+	bottom: 40px;
+	right: -130px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.b-cap__puh-button{
+	float: right;
+	margin: 2px 10px;
+	color: blue;
+	cursor: pointer;
+}
+.b-cap__puh-button:hover{
+	color:#00E8E8;
+}
+.b-cap__message{
+	padding: 2px;
+	border: 1px solid rgb(243, 243, 243);
+	background: rgb(247, 247, 247);
+	margin: 10px;
+	text-shadow: -1px -1px 0px white;
+}
+.b-cap__link{
+	text-decoration: none;
+	color: black;
+	margin: 0 10%;
+	font-size: 24px;
+	text-shadow: 0 0 1px black;
+}
+.b-rgb{}
+.b-rgb_red{color:red;}
+.b-rgb_green{color:green;}
+.b-rgb_blue{color:blue;}
+.b-rgb_yellow{color:yellow;}
