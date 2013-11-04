@@ -111,14 +111,14 @@
     </tr>
     <tr><th colspan="2">расширения</th></tr>
     <tr>
-        <td rowspan="2">blib.build({<br />'blockName'(string), <br />handle(function)}||<br />{<br />'get':{'x':n, 'y':n},<br /> 'data':{'x':n, 'y':n},<br /> 'post1':n,<br /> 'post2':n <br />...<br />})</td>
+        <td rowspan="2">blib.build({<br />'blockName'(string), <br />handler(function)}||<br />{<br />'get':{'x':n, 'y':n},<br /> 'data':{'x':n, 'y':n},<br /> 'post1':n,<br /> 'post2':n <br />...<br />})</td>
         <td>метод для отправки запроса на сервер и сбора дом дерева на стороне клиента из ответа(ajax)</td>
     </tr>
     <tr>
         <td>
 	    	{<br />
 		 blockName(string) - идентификатор для сопоставления заранее загруженного обработчика,<br />
-		 handle(function) - собственно сам обработчик,<br />
+		 handler(function) - собственно сам обработчик,<br />
 		}<br />
 		{<br />
 		 'get':{object} - обьект параметров передаваемых в запросе get-методом,<br />
@@ -134,6 +134,15 @@
     <tr>
         <td>
 	    	{server's request} - сериализованные данные.
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="2">blib.build.ready(handler(function))</td>
+        <td>задание обработчиков вызываемых каждый раз после перестройки дом дерева</td>
+    </tr>
+    <tr>
+        <td>
+	    	handler(function) - обработчик
         </td>
     </tr>
 </table>
